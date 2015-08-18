@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="dotNet-testRunner">
+  <test name="dotNet-testRunner">
+    <classes>
+      <class name="jetbrains.buildServer.dotTrace.agent.DotTraceSetupBuilderTest"/>
+      <class name="jetbrains.buildServer.dotTrace.agent.DotTraceProjectGeneratorTest"/>
+    </classes>
+  </test>
+</suite>

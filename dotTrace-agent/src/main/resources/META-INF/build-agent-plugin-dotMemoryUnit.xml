@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+       default-autowire="constructor" >
+
+       <bean class="jetbrains.buildServer.dotTrace.agent.DotTraceProjectGenerator" id="dotTraceProjectGenerator"/>
+
+       <bean class="jetbrains.buildServer.dotTrace.agent.DotTraceSetupBuilder" id="dotTraceSetupBuilder">
+              <constructor-arg ref="dotTraceProjectGenerator"/>
+              <constructor-arg ref="beforeBuildPublisher"/>
+              <constructor-arg ref="afterBuildPublisher"/>
+       </bean>
+       <bean class="jetbrains.buildServer.dotNet.buildRunner.agent.BuildCommandLineProcessorAdapterImpl" id="dotTraceBuildCommandLineProcessor">
+              <constructor-arg ref="dotTraceSetupBuilder"/>
+       </bean>
+</beans>

@@ -1,0 +1,95 @@
+package jetbrains.buildServer.dotTrace.server;
+
+import java.util.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import jetbrains.buildServer.controllers.BaseController;
+import jetbrains.buildServer.serverSide.InvalidProperty;
+import jetbrains.buildServer.serverSide.PropertiesProcessor;
+import jetbrains.buildServer.serverSide.RunTypeExtension;
+import jetbrains.buildServer.util.StringUtil;
+import jetbrains.buildServer.util.positioning.PositionAware;
+import jetbrains.buildServer.util.positioning.PositionConstraint;
+import jetbrains.buildServer.web.openapi.PluginDescriptor;
+import jetbrains.buildServer.web.openapi.WebControllerManager;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.web.servlet.ModelAndView;
+
+public class DotTraceEditExtension extends RunTypeExtension implements PositionAware {
+  private static final String PATH_NOT_SPECIFIED_ERROR_MESSAGE = "The path to dotTrace must be specified.";
+  private static final List<String> ourRunTypes = Arrays.asList("MSBuild", "NAnt", "NUnit", "jetbrains.mspec", "jetbrains.dotNetGenericRunner", "jetbrains.xunit", "VisualStudioTest", "MSTest", "VSTest");
+  private final String myViewUrl;
+  private final String myEditUrl;
+
+  public DotTraceEditExtension(
+          @NotNull final PluginDescriptor descriptor,
+          @NotNull final WebControllerManager wcm) {
+    myViewUrl = registerView(descriptor, wcm, "dotTraceView.html", "viewDotTrace.jsp");
+    myEditUrl = registerView(descriptor, wcm, "dotTraceEdit.html", "editDotTrace.jsp");
+  }
+
+  @NotNull
+  public String getOrderId() {
+    return "dotTrace";
+  }
+
+  @NotNull
+  public PositionConstraint getConstraint() {
+    return PositionConstraint.last();
+  }
+
+  @Override
+  public Collection<String> getRunTypes() {
+    return Collections.unmodifiableCollection(ourRunTypes);
+  }
+
+  @Nullable
+  @Override
+  public PropertiesProcessor getRunnerPropertiesProcessor() {
+    return new PropertiesProcessor() {
+      public Collection<InvalidProperty> process(final Map<String, String> properties) {
+        final ArrayList<InvalidProperty> result = new ArrayList<InvalidProperty>();
+
+        final boolean useDotTrace = StringUtil.isTrue(properties.get(DotTraceBean.Shared.getUseDotTraceKey()));
+        if(useDotTrace && StringUtil.isEmptyOrSpaces(properties.get(DotTraceBean.Shared.getDotTracePathKey()))) {
+          result.add(new InvalidProperty(DotTraceBean.Shared.getUseDotTraceKey(), PATH_NOT_SPECIFIED_ERROR_MESSAGE));
+        }
+
+        return result;
+      }
+    };
+  }
+
+  @Override
+  public String getEditRunnerParamsJspFilePath() {
+    return myEditUrl;
+  }
+
+  @Override
+  public String getViewRunnerParamsJspFilePath() {
+    return myViewUrl;
+  }
+
+  @Nullable
+  @Override
+  public Map<String, String> getDefaultRunnerProperties() {
+    return new HashMap<String,String>();
+  }
+
+  private String registerView(@NotNull final PluginDescriptor description,
+                              @NotNull final WebControllerManager wcm,
+                              @NotNull final String url,
+                              @NotNull final String jsp) {
+    final String actualUrl = description.getPluginResourcesPath(url);
+    final String actualJsp = description.getPluginResourcesPath(jsp);
+
+    wcm.registerController(actualUrl, new BaseController() {
+      @Override
+      protected ModelAndView doHandle(@NotNull final HttpServletRequest request, @NotNull final HttpServletResponse response) throws Exception {
+        return new ModelAndView(actualJsp);
+      }
+    });
+    return actualUrl;
+  }
+}
