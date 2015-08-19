@@ -16,7 +16,7 @@ import org.w3c.dom.Document;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
-public class DotTraceProjectGeneratorTest {
+public class ProjectGeneratorTest {
   private static final XmlDocumentManager ourDocManager = new XmlDocumentManagerImpl();
   private Mockery myCtx;
   private XmlDocumentManager myXmlDocumentManager;
@@ -81,6 +81,7 @@ public class DotTraceProjectGeneratorTest {
       //noinspection unchecked
       oneOf(myXmlDocumentManager).convertDocumentToString(with(Expectations.any(Document.class)), with(Expectations.any(Map.class)));
       will(new CustomAction("doc") {
+        @Override
         public Object invoke(Invocation invocation) throws Throwable {
           //noinspection unchecked
           return ourDocManager.convertDocumentToString((Document)invocation.getParameter(0), (Map<String, String>)invocation.getParameter(1));
@@ -94,10 +95,10 @@ public class DotTraceProjectGeneratorTest {
       will(Expectations.returnValue(new File("wd")));
     }});
 
-    final DotTraceProjectGenerator instance = createInstance();
+    final ProjectGenerator instance = createInstance();
 
     // When
-    final String content = instance.create(new DotTraceContext(setup));
+    final String content = instance.create(new Context(setup, new File("a"), new File("b"), new File("c"), new File("s")));
 
     // Then
     myCtx.assertIsSatisfied();
@@ -105,9 +106,9 @@ public class DotTraceProjectGeneratorTest {
   }
 
   @NotNull
-  private DotTraceProjectGenerator createInstance()
+  private ProjectGenerator createInstance()
   {
-    return new DotTraceProjectGenerator(
+    return new ProjectGenerator(
       myXmlDocumentManager,
       myCommandLineArgumentsService,
       myFileService);

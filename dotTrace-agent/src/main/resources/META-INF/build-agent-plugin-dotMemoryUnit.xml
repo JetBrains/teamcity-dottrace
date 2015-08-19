@@ -4,13 +4,27 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
        default-autowire="constructor" >
 
-       <bean class="jetbrains.buildServer.dotTrace.agent.DotTraceProjectGenerator" id="dotTraceProjectGenerator"/>
+       <bean class="jetbrains.buildServer.dotTrace.agent.ThresholdsParser" id="dotTraceThresholdsParser"/>
+       <bean class="jetbrains.buildServer.dotTrace.agent.ReportParser" id="dotTraceReportParser"/>
+
+       <bean class="jetbrains.buildServer.dotTrace.agent.BuildPublisher" id="dotTraceBuildPublisher">
+              <constructor-arg ref="dotTraceReportParser"/>
+       </bean>
+
+       <bean class="jetbrains.buildServer.dotTrace.agent.ProjectGenerator" id="dotTraceProjectGenerator" />
+       <bean class="jetbrains.buildServer.dotTrace.agent.PatternsGenerator" id="dotTracePatternsGenerator">
+              <constructor-arg ref="dotTraceThresholdsParser"/>
+       </bean>
+       <bean class="jetbrains.buildServer.dotTrace.agent.CmdGenerator" id="dotTraceCmdGenerator" />
 
        <bean class="jetbrains.buildServer.dotTrace.agent.DotTraceSetupBuilder" id="dotTraceSetupBuilder">
               <constructor-arg ref="dotTraceProjectGenerator"/>
+              <constructor-arg ref="dotTracePatternsGenerator"/>
+              <constructor-arg ref="dotTraceCmdGenerator"/>
               <constructor-arg ref="beforeBuildPublisher"/>
-              <constructor-arg ref="afterBuildPublisher"/>
+              <constructor-arg ref="dotTraceBuildPublisher"/>
        </bean>
+
        <bean class="jetbrains.buildServer.dotNet.buildRunner.agent.BuildCommandLineProcessorAdapterImpl" id="dotTraceBuildCommandLineProcessor">
               <constructor-arg ref="dotTraceSetupBuilder"/>
        </bean>

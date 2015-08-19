@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class DotTraceProjectGenerator implements ResourceGenerator<DotTraceContext> {
+public class ProjectGenerator implements ResourceGenerator<Context> {
   private static final Map<String, String> outDocumentProperties = new HashMap<String, String>();
   private static final String ROOT_ELEMENT = "root";
   private static final String TYPE_ATTR = "type";
@@ -42,7 +42,7 @@ public class DotTraceProjectGenerator implements ResourceGenerator<DotTraceConte
   private final CommandLineArgumentsService myCommandLineArgumentsService;
   private final FileService myFileService;
 
-  public DotTraceProjectGenerator(
+  public ProjectGenerator(
     @NotNull final XmlDocumentManager documentManager,
     @NotNull final CommandLineArgumentsService commandLineArgumentsService,
     @NotNull final FileService fileService) {
@@ -51,8 +51,9 @@ public class DotTraceProjectGenerator implements ResourceGenerator<DotTraceConte
     myFileService = fileService;
   }
 
+  @Override
   @NotNull
-  public String create(@NotNull final DotTraceContext ctx) {
+  public String create(@NotNull final Context ctx) {
     final Document doc = myDocumentManager.createDocument();
     final Element rootElement = doc.createElement(ROOT_ELEMENT);
 

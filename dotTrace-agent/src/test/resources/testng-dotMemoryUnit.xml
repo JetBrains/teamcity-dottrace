@@ -3,7 +3,11 @@
   <test name="dotNet-testRunner">
     <classes>
       <class name="jetbrains.buildServer.dotTrace.agent.DotTraceSetupBuilderTest"/>
-      <class name="jetbrains.buildServer.dotTrace.agent.DotTraceProjectGeneratorTest"/>
+      <class name="jetbrains.buildServer.dotTrace.agent.ProjectGeneratorTest"/>
+      <class name="jetbrains.buildServer.dotTrace.agent.PatternsGeneratorTest"/>
+      <class name="jetbrains.buildServer.dotTrace.agent.CmdGenerator"/>
+      <class name="jetbrains.buildServer.dotTrace.agent.ThresholdsParserTest"/>
+      <class name="jetbrains.buildServer.dotTrace.agent.BuildPublisherTest"/>
     </classes>
   </test>
 </suite>
