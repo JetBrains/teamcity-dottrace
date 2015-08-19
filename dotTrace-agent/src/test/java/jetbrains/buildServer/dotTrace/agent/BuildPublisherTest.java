@@ -10,8 +10,6 @@ import org.jmock.Mockery;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.assertj.core.api.BDDAssertions.then;
-
 public class BuildPublisherTest {
   private static final String ourlineSeparator = System.getProperty("line.separator");
   private Mockery myCtx;
