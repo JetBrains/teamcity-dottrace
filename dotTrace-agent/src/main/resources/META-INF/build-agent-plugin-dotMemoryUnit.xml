@@ -11,7 +11,11 @@
               <constructor-arg ref="dotTraceReportParser"/>
        </bean>
 
-       <bean class="jetbrains.buildServer.dotTrace.agent.ProjectGenerator" id="dotTraceProjectGenerator" />
+       <bean class="jetbrains.buildServer.dotTrace.agent.ProcessFilterParser" id="odtTraceProcessFilterParser"/>
+
+       <bean class="jetbrains.buildServer.dotTrace.agent.ProjectGenerator" id="dotTraceProjectGenerator">
+              <constructor-arg ref="odtTraceProcessFilterParser"/>
+       </bean>
        <bean class="jetbrains.buildServer.dotTrace.agent.PatternsGenerator" id="dotTracePatternsGenerator">
               <constructor-arg ref="dotTraceThresholdsParser"/>
        </bean>
