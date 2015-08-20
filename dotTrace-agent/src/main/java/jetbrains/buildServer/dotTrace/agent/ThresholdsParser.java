@@ -17,6 +17,10 @@ public class ThresholdsParser implements TextParser<Thresholds> {
     final List<String> lines = StringUtil.split(text, ourlineSeparator);
     List<Threshold> thresholds = new ArrayList<Threshold>(lines.size());
     for(String line: lines) {
+      if(StringUtil.isEmptyOrSpaces(line)) {
+        continue;
+      }
+
       final String[] params = line.split(ARG_SEPARATOR);
       if(params.length != 3) {
         throw new BuildException("Invalid thresholds");

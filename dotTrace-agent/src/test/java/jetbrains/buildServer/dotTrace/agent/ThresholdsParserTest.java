@@ -18,6 +18,7 @@ public class ThresholdsParserTest {
     return new Object[][] {
       { "IntegrationTests.MainTests.Test1 100 F15", new Thresholds(Arrays.asList(new Threshold("IntegrationTests.MainTests.Test1", "100", "F15"))), false },
       { "IntegrationTests.MainTests.Test1 100 F15" + ourlineSeparator + "IntegrationTests.MainTests.Test2 200 A15", new Thresholds(Arrays.asList(new Threshold("IntegrationTests.MainTests.Test1", "100", "F15"), new Threshold("IntegrationTests.MainTests.Test2", "200", "A15"))), false },
+      { "   " + ourlineSeparator + "IntegrationTests.MainTests.Test1 100 F15" + ourlineSeparator + "   " + ourlineSeparator + ourlineSeparator + "IntegrationTests.MainTests.Test2 200 A15" + ourlineSeparator, new Thresholds(Arrays.asList(new Threshold("IntegrationTests.MainTests.Test1", "100", "F15"), new Threshold("IntegrationTests.MainTests.Test2", "200", "A15"))), false },
       { "", new Thresholds(Collections.<Threshold>emptyList()), false },
       { "IntegrationTests.MainTests.Test1 100 F15 300", new Thresholds(Collections.<Threshold>emptyList()), true },
       { "IntegrationTests.MainTests.Test1 100", new Thresholds(Collections.<Threshold>emptyList()), true },
@@ -45,6 +46,7 @@ public class ThresholdsParserTest {
 
     // Then
     if(!expectedExceptionThrown) {
+      //noinspection ConstantConditions,ConstantConditions
       then(actualThresholds.getThresholds()).containsExactlyElementsOf(expectedThresholds.getThresholds());
     }
 

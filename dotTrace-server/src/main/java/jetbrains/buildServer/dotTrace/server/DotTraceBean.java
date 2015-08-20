@@ -1,6 +1,8 @@
 package jetbrains.buildServer.dotTrace.server;
 
+import java.util.List;
 import jetbrains.buildServer.dotTrace.Constants;
+import jetbrains.buildServer.dotTrace.MeasureType;
 import org.jetbrains.annotations.NotNull;
 
 public class DotTraceBean {
@@ -12,12 +14,32 @@ public class DotTraceBean {
   }
 
   @NotNull
-  public String getDotTracePathKey() {
+  public String getPathKey() {
     return Constants.PATH_VAR;
   }
 
   @NotNull
-  public String getDotTraceThresholdsKey() {
+  public String getThresholdsKey() {
     return Constants.THRESHOLDS_VAR;
+  }
+
+  @NotNull
+  public String getMeasureTypeKey() {
+    return Constants.MEASURE_TYPE_VAR;
+  }
+
+  @NotNull
+  public String getProfileChildProcessesKey() {
+    return Constants.PROFILE_CHILD_PROCESSES_VAR;
+  }
+
+  @NotNull
+  public String getProcessFiltersKey() {
+    return Constants.PROCESS_FILTERS_VAR;
+  }
+
+  @NotNull
+  public MeasureType[] getMeasureTypes() {
+    return MeasureType.values();
   }
 }

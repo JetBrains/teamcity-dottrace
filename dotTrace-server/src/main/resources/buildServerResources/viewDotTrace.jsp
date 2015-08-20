@@ -8,5 +8,5 @@
 </div>
 
 <div class="parameter">
-  Path to dotTrace: <props:displayValue name="${bean.dotTracePathKey}" emptyValue="<empty>"/>
+  Path to dotTrace: <props:displayValue name="${bean.pathKey}" emptyValue="<empty>"/>
 </div>

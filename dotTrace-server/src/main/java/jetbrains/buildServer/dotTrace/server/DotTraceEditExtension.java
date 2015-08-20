@@ -29,11 +29,13 @@ public class DotTraceEditExtension extends RunTypeExtension implements PositionA
     myEditUrl = registerView(descriptor, wcm, "dotTraceEdit.html", "editDotTrace.jsp");
   }
 
+  @Override
   @NotNull
   public String getOrderId() {
     return "dotTrace";
   }
 
+  @Override
   @NotNull
   public PositionConstraint getConstraint() {
     return PositionConstraint.last();
@@ -48,11 +50,12 @@ public class DotTraceEditExtension extends RunTypeExtension implements PositionA
   @Override
   public PropertiesProcessor getRunnerPropertiesProcessor() {
     return new PropertiesProcessor() {
+      @Override
       public Collection<InvalidProperty> process(final Map<String, String> properties) {
         final ArrayList<InvalidProperty> result = new ArrayList<InvalidProperty>();
 
         final boolean useDotTrace = StringUtil.isTrue(properties.get(DotTraceBean.Shared.getUseDotTraceKey()));
-        if(useDotTrace && StringUtil.isEmptyOrSpaces(properties.get(DotTraceBean.Shared.getDotTracePathKey()))) {
+        if(useDotTrace && StringUtil.isEmptyOrSpaces(properties.get(DotTraceBean.Shared.getPathKey()))) {
           result.add(new InvalidProperty(DotTraceBean.Shared.getUseDotTraceKey(), PATH_NOT_SPECIFIED_ERROR_MESSAGE));
         }
 

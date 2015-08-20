@@ -22,6 +22,7 @@ public class BuildPublisherTest {
   {
     myCtx = new Mockery();
 
+    //noinspection unchecked
     myReportParser = (TextParser<Thresholds>)myCtx.mock(TextParser.class);
     myFileService = myCtx.mock(FileService.class);
     myXmlDocumentManager = myCtx.mock(XmlDocumentManager.class);
@@ -34,9 +35,11 @@ public class BuildPublisherTest {
     final Thresholds thresholds = new Thresholds(Arrays.asList(new Threshold("Method1", "100", "1000")));
 
     myCtx.checking(new Expectations() {{
+      //noinspection EmptyCatchBlock
       try {
         oneOf(myFileService).readAllTextFile(reportFile);
-      } catch (IOException e) {
+      }
+      catch (IOException e) {
       }
 
       will(returnValue("report's content"));

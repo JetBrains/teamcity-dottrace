@@ -1,59 +1,90 @@
 package jetbrains.buildServer.dotTrace.agent;
 
+import com.intellij.openapi.util.text.StringUtil;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import jetbrains.buildServer.dotNet.buildRunner.agent.*;
+import jetbrains.buildServer.dotTrace.Constants;
+import jetbrains.buildServer.dotTrace.MeasureType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.api.Invocation;
 import org.jmock.lib.action.CustomAction;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 
 import static org.assertj.core.api.BDDAssertions.then;
+import static org.jmock.Expectations.*;
 
 public class ProjectGeneratorTest {
+  private static final String ourlineSeparator = System.getProperty("line.separator");
   private static final XmlDocumentManager ourDocManager = new XmlDocumentManagerImpl();
   private Mockery myCtx;
   private XmlDocumentManager myXmlDocumentManager;
   private FileService myFileService;
   private CommandLineArgumentsService myCommandLineArgumentsService;
+  private TextParser<List<ProcessFilter>> myProcessFiltersParser;
+  private RunnerParametersService myRunnerParametersService;
 
   @BeforeMethod
   public void setUp()
   {
     myCtx = new Mockery();
+    //noinspection unchecked
+    myProcessFiltersParser = (TextParser<List<ProcessFilter>>)myCtx.mock(TextParser.class);
     myFileService = myCtx.mock(FileService.class);
     myXmlDocumentManager = myCtx.mock(XmlDocumentManager.class);
     myCommandLineArgumentsService = myCtx.mock(CommandLineArgumentsService.class);
+    myRunnerParametersService = myCtx.mock(RunnerParametersService.class);
   }
 
-  @Test
-  public void shouldGenerateContent() {
+  @DataProvider(name = "generateContentCases")
+  public Object[][] getGenerateContentCases() {
+    return new Object[][] {
+      { "True", "True", null, Collections.emptyList(), "", null},
+      { "False", "False", null, Collections.emptyList(), "", null},
+      { "", "True", null, Collections.emptyList(), "" , null},
+      { null, "True", null, Collections.emptyList(), "", null},
+      { "True", "True", "nunit-console*", Arrays.asList(new ProcessFilter("nunit-console*")), "<Item/><Item><ProcessNameFilter>nunit-console*</ProcessNameFilter><Type>Deny</Type></Item>", null},
+      { "True", "True", "nunit-console*" + ourlineSeparator + "Abc", Arrays.asList(new ProcessFilter("nunit-console*"), new ProcessFilter("Abc")), "<Item/><Item><ProcessNameFilter>nunit-console*</ProcessNameFilter><Type>Deny</Type></Item><Item><ProcessNameFilter>Abc</ProcessNameFilter><Type>Deny</Type></Item>", null},
+    };
+  }
+
+  @Test(dataProvider = "generateContentCases")
+  public void shouldGenerateContent(
+    @Nullable final String profileChildProcesses,
+    @NotNull final String profileChildProcessesXmlValue,
+    @Nullable final String processFilters,
+    @NotNull final List<ProcessFilter> processFiltersList,
+    @NotNull final String processFiltersXmlValue,
+    @Nullable MeasureType measureType) {
     // Given
+    if(measureType == null) {
+      measureType = MeasureType.SAMPLING;
+    }
+
+    final MeasureType curMeasureType = measureType;
+
     String expectedContent = "<root>" +
                              "<HostParameters type=\"LocalHostParameters\"/>" +
                              "<Argument type=\"StandaloneArgument\">" +
                              "<Arguments>arg1 arg2</Arguments>" +
                              "<FileName>wd" + File.separator + "tool</FileName>" +
-                             "<ProfileChildProcesses>True</ProfileChildProcesses>" +
+                             "<ProfileChildProcesses>" + profileChildProcessesXmlValue + "</ProfileChildProcesses>" +
                              "<WorkingDirectory>wd</WorkingDirectory>" +
                              "<Scope>" +
-                             "<ProcessFilters>" +
-                             "<Item/>" +
-                             // "<Item>" +
-                             // "<ProcessNameFilter>nunit-console*</ProcessNameFilter>" +
-                             // "<Type>Deny</Type>" +
-                             // "</Item>" +
-                             "</ProcessFilters>" +
+                             (!processFiltersXmlValue.equals("") ? "<ProcessFilters>" + processFiltersXmlValue + "</ProcessFilters>" : "<ProcessFilters/>") +
                              "</Scope>" +
                              "</Argument>" +
                              "<Info type=\"PerformanceInfo\">" +
-                             "<MeasureType>Sampling</MeasureType>" +
+                             "<MeasureType>" + curMeasureType.getDescription() + "</MeasureType>" +
                              "<MeterKind>Rdtsc</MeterKind>" +
                              "<InjectInfo>" +
                              "<SymbolSearch>" +
@@ -76,10 +107,10 @@ public class ProjectGeneratorTest {
 
     myCtx.checking(new Expectations() {{
       oneOf(myXmlDocumentManager).createDocument();
-      will(Expectations.returnValue(ourDocManager.createDocument()));
+      will(returnValue(ourDocManager.createDocument()));
 
       //noinspection unchecked
-      oneOf(myXmlDocumentManager).convertDocumentToString(with(Expectations.any(Document.class)), with(Expectations.any(Map.class)));
+      oneOf(myXmlDocumentManager).convertDocumentToString(with(any(Document.class)), with(any(Map.class)));
       will(new CustomAction("doc") {
         @Override
         public Object invoke(Invocation invocation) throws Throwable {
@@ -89,10 +120,23 @@ public class ProjectGeneratorTest {
       });
 
       oneOf(myCommandLineArgumentsService).createCommandLineString(setup.getArgs());
-      will(Expectations.returnValue("arg1 arg2"));
+      will(returnValue("arg1 arg2"));
 
       oneOf(myFileService).getCheckoutDirectory();
-      will(Expectations.returnValue(new File("wd")));
+      will(returnValue(new File("wd")));
+
+      oneOf(myRunnerParametersService).tryGetRunnerParameter(Constants.PROFILE_CHILD_PROCESSES_VAR);
+      will(returnValue(profileChildProcesses));
+
+      oneOf(myRunnerParametersService).tryGetRunnerParameter(Constants.PROCESS_FILTERS_VAR);
+      will(returnValue(processFilters));
+
+      //noinspection ConstantConditions
+      allowing(myProcessFiltersParser).parse(processFilters);
+      will(returnValue(processFiltersList));
+
+      oneOf(myRunnerParametersService).tryGetRunnerParameter(Constants.MEASURE_TYPE_VAR);
+      will(returnValue(curMeasureType.getValue()));
     }});
 
     final ProjectGenerator instance = createInstance();
@@ -109,8 +153,10 @@ public class ProjectGeneratorTest {
   private ProjectGenerator createInstance()
   {
     return new ProjectGenerator(
+      myProcessFiltersParser,
       myXmlDocumentManager,
       myCommandLineArgumentsService,
-      myFileService);
+      myFileService,
+      myRunnerParametersService);
   }
 }

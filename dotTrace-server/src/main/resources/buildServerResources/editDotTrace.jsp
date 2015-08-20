@@ -16,20 +16,58 @@
   </tr>
 
   <tr class="advancedSetting">
-    <th><label for="${bean.dotTracePathKey}">Path to dotTrace: <l:star/></label></th>
+    <th><label for="${bean.pathKey}">Path to dotTrace: <l:star/></label></th>
     <td>
       <div class="completionIconWrapper">
-        <props:textProperty name="${bean.dotTracePathKey}" className="longField"/>
+        <props:textProperty name="${bean.pathKey}" className="longField"/>
       </div>
-      <span class="error" id="error_${bean.dotTracePathKey}"></span>
+      <span class="error" id="error_${bean.pathKey}"></span>
       <span class="smallNote">Specify path to dotTrace.exe</span>
     </td>
   </tr>
 
   <tr class="advancedSetting">
-    <th><label for="com.dotTracePlugin.common.Thresholds">Threshold values: <l:star/></label></th>
+    <th><label for="${bean.measureTypeKey}">Measure type: <l:star/></label></th>
     <td>
-      <props:multilineProperty name="${bean.dotTraceThresholdsKey}" className="longField" cols="30" rows="10" expanded="true" linkTitle="Enter performance thresholds"/>
+      <div class="completionIconWrapper">
+        <props:selectProperty name="${bean.measureTypeKey}" enableFilter="true" className="smallField" id="getMeasureTypeDropdown">
+          <c:forEach var="item" items="${bean.measureTypes}">
+            <props:option value="${item.value}"><c:out value="${item.description}"/></props:option>
+          </c:forEach>
+        </props:selectProperty>
+      </div>
+      <span class="error" id="error_${bean.pathKey}"></span>
+      <span class="smallNote">Measure type defines what profiling method will be used and how profiling data will be collected.
+        <br/><b>Sampling</b> - accurate time measurement, inaccurate measurement of number of calls.
+        <br/><b>Tracing</b> - accurate calls number measurement, time measurement may be inaccurate due to profiler overhead.
+        <br/><b>Line-by-line</b> - each line of code is measured, call time values are inaccurate due to huge profiler overhead.
+      </span>
+    </td>
+  </tr>
+
+  <tr class="advancedSetting">
+    <th><label for="${bean.useDotTraceKey}">Profile child processes:</label></th>
+    <td><props:checkboxProperty name="${bean.profileChildProcessesKey}" />
+      <span class="smallNote">If checked, dotTrace will profile not only the main app process but the processes it runs as well.</span>
+      <span class="error" id="error_${bean.profileChildProcessesKey}"></span>
+    </td>
+  </tr>
+
+  <tr class="advancedSetting">
+    <th><label for="${bean.processFiltersKey}">Filter processes: <l:star/></label></th>
+    <td>
+      <props:multilineProperty name="${bean.processFiltersKey}" className="longField" cols="30" rows="10" expanded="true" linkTitle="Enter process filters"/>
+      <span class="smallNote">Newline-separated list of masks. Each mask defines which processes should be excluded from profiling, for example:
+        <br/><i>*service.exe</i>
+        <br/><i>testRunner*.exe</i>
+      </span>
+    </td>
+  </tr>
+
+  <tr class="advancedSetting">
+    <th><label for="${bean.thresholdsKey}">Threshold values: <l:star/></label></th>
+    <td>
+      <props:multilineProperty name="${bean.thresholdsKey}" className="longField" cols="30" rows="10" expanded="true" linkTitle="Enter performance thresholds"/>
             <span class="smallNote">Newline-separated list of methods and their performance thresholds.
                 <br/>Pattern: <b>Namespace.Class.Method TotalTime OwnTime</b>, where
                 <br/><b>TotalTime</b> - execution time of the method's call subtree in ms.

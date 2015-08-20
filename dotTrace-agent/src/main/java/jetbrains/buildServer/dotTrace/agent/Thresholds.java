@@ -10,6 +10,7 @@ public class Thresholds {
     myThresholds = thresholds;
   }
 
+  @NotNull
   public List<Threshold> getThresholds() {
     return myThresholds;
   }

@@ -52,12 +52,12 @@ public class DotTraceSetupBuilder implements CommandLineSetupBuilder {
       return Collections.singleton(baseSetup);
     }
 
-    String dotTraceTool = myParametersService.tryGetRunnerParameter(Constants.USE_VAR);
+    final String dotTraceTool = myParametersService.tryGetRunnerParameter(Constants.USE_VAR);
     if (StringUtil.isEmptyOrSpaces(dotTraceTool) || !Boolean.parseBoolean(dotTraceTool)) {
       return Collections.singleton(baseSetup);
     }
 
-    List<CommandLineResource> resources = new ArrayList<CommandLineResource>(baseSetup.getResources());
+    final List<CommandLineResource> resources = new ArrayList<CommandLineResource>(baseSetup.getResources());
     final File cmdFile = myFileService.getTempFileName(DOT_TRACE_CMD_EXT);
     final File projectFile = myFileService.getTempFileName(DOT_TRACE_PROJECT_EXT);
     final File snapshotFile = myFileService.getTempFileName(DOT_TRACE_SNAPSHOT_EXT);
