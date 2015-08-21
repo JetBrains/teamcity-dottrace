@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 public class DotTraceEditExtension extends RunTypeExtension implements PositionAware {
   private static final String PATH_NOT_SPECIFIED_ERROR_MESSAGE = "The path to dotTrace must be specified.";
+  private static final String THRESHOLDS_NOT_SPECIFIED_ERROR_MESSAGE = "The threshold values must be specified.";
   private static final List<String> ourRunTypes = Arrays.asList("MSBuild", "NAnt", "NUnit", "jetbrains.mspec", "jetbrains.dotNetGenericRunner", "jetbrains.xunit", "VisualStudioTest", "MSTest", "VSTest");
   private final String myViewUrl;
   private final String myEditUrl;
@@ -56,7 +57,11 @@ public class DotTraceEditExtension extends RunTypeExtension implements PositionA
 
         final boolean useDotTrace = StringUtil.isTrue(properties.get(DotTraceBean.Shared.getUseDotTraceKey()));
         if(useDotTrace && StringUtil.isEmptyOrSpaces(properties.get(DotTraceBean.Shared.getPathKey()))) {
-          result.add(new InvalidProperty(DotTraceBean.Shared.getUseDotTraceKey(), PATH_NOT_SPECIFIED_ERROR_MESSAGE));
+          result.add(new InvalidProperty(DotTraceBean.Shared.getPathKey(), PATH_NOT_SPECIFIED_ERROR_MESSAGE));
+        }
+
+        if(useDotTrace && StringUtil.isEmptyOrSpaces(properties.get(DotTraceBean.Shared.getThresholdsKey()))) {
+          result.add(new InvalidProperty(DotTraceBean.Shared.getThresholdsKey(), THRESHOLDS_NOT_SPECIFIED_ERROR_MESSAGE));
         }
 
         return result;

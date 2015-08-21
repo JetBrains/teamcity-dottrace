@@ -6,16 +6,45 @@
 <jsp:useBean id="propertiesBean" scope="request" type="jetbrains.buildServer.controllers.BasePropertiesBean"/>
 <jsp:useBean id="bean" class="jetbrains.buildServer.dotTrace.server.DotTraceBean"/>
 
-<l:settingsGroup title="dotTrace">
-  <tr class="advancedSetting">
-    <th><label for="${bean.useDotTraceKey}">Use dotTrace:</label></th>
-    <td><props:checkboxProperty name="${bean.useDotTraceKey}" />
-      <span class="smallNote">The tests will be started under the JetBrains dotTrace tool.</span>
+<script type="text/javascript">
+  BS.DotTrace = {
+    updatePathVisibility: function() {
+      var useDotTraceElement = document.getElementById("${bean.useDotTraceKey}");
+      var useDotTrace = useDotTraceElement.checked;
+
+      if (useDotTrace == true) {
+        $j('#dotTracePathContainer').removeClass("hidden");
+        $j('#dotTraceMeasureTypeContainer').removeClass("hidden");
+        $j('#dotTraceProfileChildProcessesContainer').removeClass("hidden");
+        $j('#dotTraceProcessFiltersContainer').removeClass("hidden");
+        $j('#dotTraceThresholdsContainer').removeClass("hidden");
+      }
+      else {
+        $j('#dotTracePathContainer').addClass("hidden");
+        $j('#dotTraceMeasureTypeContainer').addClass("hidden");
+        $j('#dotTraceProfileChildProcessesContainer').addClass("hidden");
+        $j('#dotTraceProcessFiltersContainer').addClass("hidden");
+        $j('#dotTraceThresholdsContainer').addClass("hidden");
+      }
+
+      BS.VisibilityHandlers.updateVisibility($('dotTracePathContainer'));
+      BS.VisibilityHandlers.updateVisibility($('dotTraceMeasureTypeContainer'));
+      BS.VisibilityHandlers.updateVisibility($('dotTraceProfileChildProcessesContainer'));
+      BS.VisibilityHandlers.updateVisibility($('dotTraceProcessFiltersContainer'));
+      BS.VisibilityHandlers.updateVisibility($('dotTraceThresholdsContainer'));
+    }
+  }
+</script>
+
+<l:settingsGroup title="<a href='https://www.jetbrains.com/profiler/help/Performance_Profiling__Profiling_Using_the_Command_Line.html' target='JetBrains dotTrace'>JetBrains dotTrace</a>">
+  <tr>
+    <th><label for="${bean.useDotTraceKey}">Run build step under dotTrace profiler: </label></th>
+    <td><props:checkboxProperty name="${bean.useDotTraceKey}" onclick="BS.DotTrace.updatePathVisibility()"/>
       <span class="error" id="error_${bean.useDotTraceKey}"></span>
     </td>
   </tr>
 
-  <tr class="advancedSetting">
+  <tr id="dotTracePathContainer" class="hidden">
     <th><label for="${bean.pathKey}">Path to dotTrace: <l:star/></label></th>
     <td>
       <div class="completionIconWrapper">
@@ -26,7 +55,7 @@
     </td>
   </tr>
 
-  <tr class="advancedSetting">
+  <tr id="dotTraceMeasureTypeContainer" class="advancedSetting hidden">
     <th><label for="${bean.measureTypeKey}">Measure type: <l:star/></label></th>
     <td>
       <div class="completionIconWrapper">
@@ -45,16 +74,16 @@
     </td>
   </tr>
 
-  <tr class="advancedSetting">
-    <th><label for="${bean.useDotTraceKey}">Profile child processes:</label></th>
+  <tr id="dotTraceProfileChildProcessesContainer" class="advancedSetting hidden">
+    <th><label for="${bean.profileChildProcessesKey}">Profile child processes: </label></th>
     <td><props:checkboxProperty name="${bean.profileChildProcessesKey}" />
       <span class="smallNote">If checked, dotTrace will profile not only the main app process but the processes it runs as well.</span>
       <span class="error" id="error_${bean.profileChildProcessesKey}"></span>
     </td>
   </tr>
 
-  <tr class="advancedSetting">
-    <th><label for="${bean.processFiltersKey}">Filter processes: <l:star/></label></th>
+  <tr id="dotTraceProcessFiltersContainer" class="advancedSetting hidden">
+    <th><label for="${bean.processFiltersKey}">Processes' filters: <l:star/></label></th>
     <td>
       <props:multilineProperty name="${bean.processFiltersKey}" className="longField" cols="30" rows="10" expanded="true" linkTitle="Enter process filters"/>
       <span class="smallNote">Newline-separated list of masks. Each mask defines which processes should be excluded from profiling, for example:
@@ -64,7 +93,7 @@
     </td>
   </tr>
 
-  <tr class="advancedSetting">
+  <tr id="dotTraceThresholdsContainer" class="hidden">
     <th><label for="${bean.thresholdsKey}">Threshold values: <l:star/></label></th>
     <td>
       <props:multilineProperty name="${bean.thresholdsKey}" className="longField" cols="30" rows="10" expanded="true" linkTitle="Enter performance thresholds"/>
@@ -89,3 +118,7 @@
   </tr>
 
 </l:settingsGroup>
+
+<script type="text/javascript">
+  BS.DotTrace.updatePathVisibility();
+</script>
