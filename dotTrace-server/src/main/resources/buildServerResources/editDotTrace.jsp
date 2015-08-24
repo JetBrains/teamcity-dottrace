@@ -32,11 +32,17 @@
       BS.VisibilityHandlers.updateVisibility($('dotTraceProfileChildProcessesContainer'));
       BS.VisibilityHandlers.updateVisibility($('dotTraceProcessFiltersContainer'));
       BS.VisibilityHandlers.updateVisibility($('dotTraceThresholdsContainer'));
+    },
+
+    showHomePage: function() {
+      var winSize = BS.Util.windowSize();
+      BS.Util.popupWindow('https://www.jetbrains.com/profiler/help/Performance_Profiling__Profiling_Using_the_Command_Line.html', 'JetBrains dotTrace', { width: 0.9 * winSize[0], height: 0.9 * winSize[1] });
+      BS.stopPropagation(event);
     }
   }
 </script>
 
-<l:settingsGroup title="<a href='https://www.jetbrains.com/profiler/help/Performance_Profiling__Profiling_Using_the_Command_Line.html' target='JetBrains dotTrace'>JetBrains dotTrace</a>">
+<l:settingsGroup title="JetBrains dotTrace <i class='icon-external-link' title='Open in new window' onclick='BS.DotTrace.showHomePage()'/i>">
   <tr>
     <th><label for="${bean.useDotTraceKey}">Run build step under dotTrace profiler: </label></th>
     <td><props:checkboxProperty name="${bean.useDotTraceKey}" onclick="BS.DotTrace.updatePathVisibility()"/>

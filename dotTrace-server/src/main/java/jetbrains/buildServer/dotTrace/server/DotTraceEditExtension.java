@@ -7,6 +7,7 @@ import jetbrains.buildServer.controllers.BaseController;
 import jetbrains.buildServer.serverSide.InvalidProperty;
 import jetbrains.buildServer.serverSide.PropertiesProcessor;
 import jetbrains.buildServer.serverSide.RunTypeExtension;
+import jetbrains.buildServer.util.CollectionsUtil;
 import jetbrains.buildServer.util.StringUtil;
 import jetbrains.buildServer.util.positioning.PositionAware;
 import jetbrains.buildServer.util.positioning.PositionConstraint;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class DotTraceEditExtension extends RunTypeExtension implements PositionAware {
   private static final String PATH_NOT_SPECIFIED_ERROR_MESSAGE = "The path to dotTrace must be specified.";
   private static final String THRESHOLDS_NOT_SPECIFIED_ERROR_MESSAGE = "The threshold values must be specified.";
+  private static final String PROFILE_CHILD_PROCESSES_DEFAULT_VAL = "true";
   private static final List<String> ourRunTypes = Arrays.asList("MSBuild", "NAnt", "NUnit", "jetbrains.mspec", "jetbrains.dotNetGenericRunner", "jetbrains.xunit", "VisualStudioTest", "MSTest", "VSTest");
   private final String myViewUrl;
   private final String myEditUrl;
@@ -82,7 +84,9 @@ public class DotTraceEditExtension extends RunTypeExtension implements PositionA
   @Nullable
   @Override
   public Map<String, String> getDefaultRunnerProperties() {
-    return new HashMap<String,String>();
+    return CollectionsUtil.asMap(
+      DotTraceBean.Shared.getMeasureTypeKey(), DotTraceBean.Shared.getMeasureTypes()[0].getValue(),
+      DotTraceBean.Shared.getProfileChildProcessesKey(), PROFILE_CHILD_PROCESSES_DEFAULT_VAL);
   }
 
   private String registerView(@NotNull final PluginDescriptor description,
