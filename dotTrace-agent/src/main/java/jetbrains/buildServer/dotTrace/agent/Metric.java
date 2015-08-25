@@ -2,12 +2,12 @@ package jetbrains.buildServer.dotTrace.agent;
 
 import org.jetbrains.annotations.NotNull;
 
-public class Threshold {
+public class Metric {
   private final String myMethodName;
   private final String myTotalTime;
   private final String myOwnTime;
 
-  public Threshold(
+  public Metric(
     @NotNull final String methodName,
     @NotNull final String totalTime,
     @NotNull final String ownTime) {
@@ -36,11 +36,11 @@ public class Threshold {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final Threshold threshold = (Threshold)o;
+    final Metric metric = (Metric)o;
 
-    if (!getMethodName().equals(threshold.getMethodName())) return false;
-    if (!getTotalTime().equals(threshold.getTotalTime())) return false;
-    return getOwnTime().equals(threshold.getOwnTime());
+    if (!getMethodName().equals(metric.getMethodName())) return false;
+    if (!getTotalTime().equals(metric.getTotalTime())) return false;
+    return getOwnTime().equals(metric.getOwnTime());
 
   }
 
@@ -54,7 +54,7 @@ public class Threshold {
 
   @Override
   public String toString() {
-    return "Threshold{" +
+    return "Metric{" +
            "MethodName='" + myMethodName + '\'' +
            ", TotalTime='" + myTotalTime + '\'' +
            ", OwnTime='" + myOwnTime + '\'' +

@@ -7,28 +7,28 @@ import jetbrains.buildServer.dotNet.buildRunner.agent.BuildException;
 import jetbrains.buildServer.dotNet.buildRunner.agent.TextParser;
 import org.jetbrains.annotations.NotNull;
 
-public class ThresholdsParser implements TextParser<Thresholds> {
+public class ThresholdsParser implements TextParser<Metrics> {
   private static final String ARG_SEPARATOR = " ";
-  private static final String ourlineSeparator = System.getProperty("line.separator");
+  private static final String ourlineSeparator = "\n";
 
   @NotNull
   @Override
-  public Thresholds parse(@NotNull final String text) {
+  public Metrics parse(@NotNull final String text) {
     final List<String> lines = StringUtil.split(text, ourlineSeparator);
-    List<Threshold> thresholds = new ArrayList<Threshold>(lines.size());
+    List<Metric> metrics = new ArrayList<Metric>(lines.size());
     for(String line: lines) {
       if(StringUtil.isEmptyOrSpaces(line)) {
         continue;
       }
 
-      final String[] params = line.split(ARG_SEPARATOR);
+      final String[] params = line.trim().split(ARG_SEPARATOR);
       if(params.length != 3) {
-        throw new BuildException("Invalid thresholds");
+        throw new BuildException("Invalid metrics");
       }
 
-      thresholds.add(new Threshold(params[0], params[1], params[2]));
+      metrics.add(new Metric(params[0], params[1], params[2]));
     }
 
-    return new Thresholds(thresholds);
+    return new Metrics(metrics);
   }
 }

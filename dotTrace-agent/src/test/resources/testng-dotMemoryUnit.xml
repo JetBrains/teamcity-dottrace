@@ -6,7 +6,7 @@
       <class name="jetbrains.buildServer.dotTrace.agent.ProjectGeneratorTest"/>
       <class name="jetbrains.buildServer.dotTrace.agent.PatternsGeneratorTest"/>
       <class name="jetbrains.buildServer.dotTrace.agent.CmdGenerator"/>
-      <class name="jetbrains.buildServer.dotTrace.agent.ThresholdsParserTest"/>
+      <class name="jetbrains.buildServer.dotTrace.agent.MetricsParserTest"/>
       <class name="jetbrains.buildServer.dotTrace.agent.BuildPublisherTest"/>
       <class name="jetbrains.buildServer.dotTrace.agent.ProcessFilterParserTest"/>
     </classes>

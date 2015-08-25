@@ -8,7 +8,7 @@ import jetbrains.buildServer.dotNet.buildRunner.agent.TextParser;
 import org.jetbrains.annotations.NotNull;
 
 public class ProcessFilterParser implements TextParser<List<ProcessFilter>> {
-  private static final String ourlineSeparator = System.getProperty("line.separator");
+  private static final String ourlineSeparator = "\n";
 
   @NotNull
   @Override

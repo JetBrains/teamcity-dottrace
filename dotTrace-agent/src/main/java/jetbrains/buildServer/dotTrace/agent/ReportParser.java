@@ -4,10 +4,10 @@ import java.util.Collections;
 import jetbrains.buildServer.dotNet.buildRunner.agent.TextParser;
 import org.jetbrains.annotations.NotNull;
 
-public class ReportParser implements TextParser<Thresholds> {
+public class ReportParser implements TextParser<Metrics> {
   @NotNull
   @Override
-  public Thresholds parse(final String s) {
-    return new Thresholds(Collections.<Threshold>emptyList());
+  public Metrics parse(@NotNull final String reportContent) {
+    return new Metrics(Collections.<Metric>emptyList());
   }
 }

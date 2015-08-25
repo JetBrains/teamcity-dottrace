@@ -1,6 +1,5 @@
 package jetbrains.buildServer.dotTrace.agent;
 
-import com.intellij.openapi.util.text.StringUtil;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,7 +20,6 @@ import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 
 import static org.assertj.core.api.BDDAssertions.then;
-import static org.jmock.Expectations.*;
 
 public class ProjectGeneratorTest {
   private static final String ourlineSeparator = System.getProperty("line.separator");

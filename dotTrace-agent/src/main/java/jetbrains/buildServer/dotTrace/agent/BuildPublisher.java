@@ -1,22 +1,36 @@
 package jetbrains.buildServer.dotTrace.agent;
 
+import com.intellij.openapi.util.text.StringUtil;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import jetbrains.buildServer.dotNet.buildRunner.agent.*;
+import jetbrains.buildServer.dotTrace.Constants;
+import jetbrains.buildServer.dotTrace.StatisticMessage;
 import org.jetbrains.annotations.NotNull;
 
 public class BuildPublisher implements ResourcePublisher {
-  private final TextParser<Thresholds> myReportParser;
+  private final TextParser<Metrics> myReportParser;
+  private final TextParser<Metrics> myThresholdsParser;
+  private final ResourcePublisher myAfterBuildPublisher;
+  private final RunnerParametersService myParametersService;
   private final FileService myFileService;
-  private final XmlDocumentManager myDocumentManager;
+  private final LoggerService myLoggerService;
 
   public BuildPublisher(
-    @NotNull final TextParser<Thresholds> reportParser,
+    @NotNull final TextParser<Metrics> reportParser,
+    @NotNull final TextParser<Metrics> thresholdsParser,
+    @NotNull final ResourcePublisher afterBuildPublisher,
+    @NotNull final RunnerParametersService parametersService,
     @NotNull final FileService fileService,
-    @NotNull final XmlDocumentManager documentManager) {
+    @NotNull final LoggerService loggerService) {
     myReportParser = reportParser;
+    myThresholdsParser = thresholdsParser;
+    myAfterBuildPublisher = afterBuildPublisher;
+    myParametersService = parametersService;
     myFileService = fileService;
-    myDocumentManager = documentManager;
+    myLoggerService = loggerService;
   }
 
   @Override
@@ -25,12 +39,38 @@ public class BuildPublisher implements ResourcePublisher {
 
   @Override
   public void publishAfterBuildArtifactFile(@NotNull final CommandLineExecutionContext commandLineExecutionContext, @NotNull final File reportFile) {
+    myAfterBuildPublisher.publishAfterBuildArtifactFile(commandLineExecutionContext, reportFile);
+
+    Metrics thresholdValues;
+    String thresholdsStr = myParametersService.tryGetRunnerParameter(Constants.THRESHOLDS_VAR);
+    if(!StringUtil.isEmptyOrSpaces(thresholdsStr)) {
+      thresholdValues = myThresholdsParser.parse(thresholdsStr);
+    }
+    else {
+      return;
+    }
+
+    final Map<String, Metric> thresholdValueMap = new HashMap<String, Metric>();
+    for (Metric thresholdValue: thresholdValues.getMetrics()) {
+      thresholdValueMap.put(thresholdValue.getMethodName(), thresholdValue);
+    }
+
     try {
       final String reportContent = myFileService.readAllTextFile(reportFile);
-      final Thresholds reportResults = myReportParser.parse(reportContent);
+      final Metrics measuredValues = myReportParser.parse(reportContent);
+
+
+      for (Metric measuredValue : measuredValues.getMetrics()) {
+        final Metric thresholdValue = thresholdValueMap.get(measuredValue.getMethodName());
+        if(thresholdValue == null) {
+          continue;
+        }
+
+        myLoggerService.onMessage(new StatisticMessage(measuredValue.getMethodName(), thresholdValue.getTotalTime(), thresholdValue.getOwnTime(), measuredValue.getTotalTime(), measuredValue.getOwnTime()));
+      }
     }
     catch (IOException e) {
-      new BuildException(e.getMessage());
+      throw new BuildException(e.getMessage());
     }
   }
 }

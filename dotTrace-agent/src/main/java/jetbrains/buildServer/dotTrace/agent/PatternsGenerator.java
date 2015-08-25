@@ -12,15 +12,15 @@ public class PatternsGenerator implements ResourceGenerator<Context> {
   private static final String PATTERNS_ELEMENT = "Patterns";
   private static final String PATTERN_ELEMENT = "Pattern";
 
-  private final TextParser<Thresholds> myReportPatternsParser;
+  private final TextParser<Metrics> myThresholdsParser;
   private final RunnerParametersService myParametersService;
   private final XmlDocumentManager myDocumentManager;
 
   public PatternsGenerator(
-    @NotNull final TextParser<Thresholds> reportPatternsParser,
+    @NotNull final TextParser<Metrics> thresholdsParser,
     @NotNull final RunnerParametersService parametersService,
     @NotNull final XmlDocumentManager documentManager) {
-    myReportPatternsParser = reportPatternsParser;
+    myThresholdsParser = thresholdsParser;
     myParametersService = parametersService;
     myDocumentManager = documentManager;
   }
@@ -32,9 +32,9 @@ public class PatternsGenerator implements ResourceGenerator<Context> {
     final Element patternsElement = doc.createElement(PATTERNS_ELEMENT);
     String thresholdsStr = myParametersService.tryGetRunnerParameter(Constants.THRESHOLDS_VAR);
     if(!StringUtil.isEmptyOrSpaces(thresholdsStr)) {
-      final Thresholds thresholds = myReportPatternsParser.parse(thresholdsStr);
-      for(Threshold threshold: thresholds.getThresholds()) {
-        final Element patternElement = createSimpleElement(doc, PATTERN_ELEMENT, threshold.getMethodName());
+      final Metrics metrics = myThresholdsParser.parse(thresholdsStr);
+      for(Metric metric : metrics.getMetrics()) {
+        final Element patternElement = createSimpleElement(doc, PATTERN_ELEMENT, metric.getMethodName());
         patternsElement.appendChild(patternElement);
       }
     }

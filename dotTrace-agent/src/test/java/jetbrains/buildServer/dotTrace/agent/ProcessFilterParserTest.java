@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
 import static org.assertj.core.api.BDDAssertions.then;
 
 public class ProcessFilterParserTest {
-  private static final String ourlineSeparator = System.getProperty("line.separator");
+  private static final String ourlineSeparator = "\n";
 
   @DataProvider(name = "parseFiltersFromStringCases")
   public Object[][] getParseFiltersFromStringCases() {

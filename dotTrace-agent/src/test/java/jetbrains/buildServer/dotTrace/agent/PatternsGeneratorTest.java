@@ -15,7 +15,7 @@ import static org.assertj.core.api.BDDAssertions.then;
 
 public class PatternsGeneratorTest {
   private Mockery myCtx;
-  private TextParser<Thresholds> myReportPatternsParser;
+  private TextParser<Metrics> myReportPatternsParser;
   private RunnerParametersService myRunnerParametersService;
 
   @BeforeMethod
@@ -23,7 +23,8 @@ public class PatternsGeneratorTest {
   {
     myCtx = new Mockery();
 
-    myReportPatternsParser = (TextParser<Thresholds>)myCtx.mock(TextParser.class);
+    //noinspection unchecked
+    myReportPatternsParser = (TextParser<Metrics>)myCtx.mock(TextParser.class);
     myRunnerParametersService = myCtx.mock(RunnerParametersService.class);
   }
 
@@ -41,7 +42,7 @@ public class PatternsGeneratorTest {
       will(returnValue("thresholds"));
 
       oneOf(myReportPatternsParser).parse("thresholds");
-      will(returnValue(new Thresholds(Arrays.asList(new Threshold("Method1", "100", "200"), new Threshold("Method2", "200", "300")))));
+      will(returnValue(new Metrics(Arrays.asList(new Metric("Method1", "100", "200"), new Metric("Method2", "200", "300")))));
     }});
 
     final PatternsGenerator instance = createInstance();
