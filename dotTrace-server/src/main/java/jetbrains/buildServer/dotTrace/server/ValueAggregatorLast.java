@@ -9,6 +9,7 @@ public class ValueAggregatorLast implements ValueAggregator {
 
   @Override
   public void aggregate(@NotNull final BigDecimal value) {
+    myVal = value;
   }
 
   @Override

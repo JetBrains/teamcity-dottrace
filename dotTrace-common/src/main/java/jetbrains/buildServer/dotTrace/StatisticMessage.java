@@ -51,22 +51,22 @@ public class StatisticMessage extends MessageWithAttributes {
 
   @NotNull
   public String getOwnTimeThreshold() {
-    return getAttributes().get(THRESHOLD_TOTAL_TIME_STATISTIC_MESSAGE_ATTR);
-  }
-
-  @NotNull
-  public String getTotalTimeThreshold() {
     return getAttributes().get(THRESHOLD_OWN_TIME_STATISTIC_MESSAGE_ATTR);
   }
 
   @NotNull
+  public String getTotalTimeThreshold() {
+    return getAttributes().get(THRESHOLD_TOTAL_TIME_STATISTIC_MESSAGE_ATTR);
+  }
+
+  @NotNull
   public String getMeasuredOwnTime() {
-    return getAttributes().get(MEASURED_TOTAL_TIME_STATISTIC_MESSAGE_ATTR);
+    return getAttributes().get(MEASURED_OWN_TIME_STATISTIC_MESSAGE_ATTR);
   }
 
   @NotNull
   public String getMeasuredTotalTime() {
-    return getAttributes().get(MEASURED_OWN_TIME_STATISTIC_MESSAGE_ATTR);
+    return getAttributes().get(MEASURED_TOTAL_TIME_STATISTIC_MESSAGE_ATTR);
   }
 
   @Override
@@ -92,16 +92,5 @@ public class StatisticMessage extends MessageWithAttributes {
     result = 31 * result + getMeasuredTotalTime().hashCode();
     result = 31 * result + getMeasuredOwnTime().hashCode();
     return result;
-  }
-
-  @Override
-  public String toString() {
-    return "StatisticMessage{" +
-           "MethodName='" + getMethodName() + '\'' +
-           ", TotalTimeThreshold='" + getTotalTimeThreshold() + '\'' +
-           ", OwnTimeThreshold='" + getOwnTimeThreshold() + '\'' +
-           ", MeasuredTotalTime='" + getMeasuredTotalTime() + '\'' +
-           ", MeasuredOwnTime='" + getMeasuredOwnTime() + '\'' +
-           '}';
   }
 }

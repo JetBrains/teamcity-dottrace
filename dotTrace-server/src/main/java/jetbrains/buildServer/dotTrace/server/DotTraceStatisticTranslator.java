@@ -21,18 +21,20 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.BeanFactory;
 
 public class DotTraceStatisticTranslator implements ServiceMessageTranslator {
-  private static final BigDecimal MULTIPLICAND_100 = new BigDecimal(100);
   public static final String DOT_TRACE_TOTAL_TIME_STATISTIC_KEY = "dot_trace_total_time";
   public static final String DOT_TRACE_OWN_TIME_STATISTIC_KEY = "dot_trace_own_time";
   public static final String TOTAL_TIME_THRESHOLD_NAME = "Total Time";
   public static final String OWN_TIME_THRESHOLD_NAME = "Own Time";
   private final BuildDataStorage myStorage;
-  private BeanFactory myBeanFactory;
+  private final BeanFactory myBeanFactory;
+  private final MetricComparer myMetricComparer;
 
   public DotTraceStatisticTranslator(
     @NotNull final ServerExtensionHolder server,
     @NotNull final BuildDataStorage storage,
-    @NotNull final BeanFactory beanFactory) {
+    @NotNull final BeanFactory beanFactory,
+    @NotNull final MetricComparer metricComparer) {
+    myMetricComparer = metricComparer;
     server.registerExtension(ServiceMessageTranslator.class, getClass().getName(), this);
     myStorage = storage;
     myBeanFactory = beanFactory;
@@ -75,13 +77,20 @@ public class DotTraceStatisticTranslator implements ServiceMessageTranslator {
     final ValueAggregator ownTimeAgg = valueAggregatorFactory.create(ownTimeThreshold.getType());
 
     for(SFinishedBuild build: buildType.getHistory()) {
-      if(!build.getBuildStatus().isSuccessful()) {
+      /*if(!build.getBuildStatus().isSuccessful()) {
         continue;
-      }
+      }*/
 
       final Map<String, BigDecimal> values = myStorage.getValues(build);
-      totalTimeAgg.aggregate(values.get(totalTimeKey));
-      ownTimeAgg.aggregate(values.get(ownTimeKey));
+      @Nullable final BigDecimal totalTimeVal = values.get(totalTimeKey);
+      if(totalTimeVal != null) {
+        totalTimeAgg.aggregate(values.get(totalTimeKey));
+      }
+
+      @Nullable final BigDecimal ownTimeVal = values.get(ownTimeKey);
+      if(ownTimeVal != null) {
+        ownTimeAgg.aggregate(values.get(ownTimeKey));
+      }
 
       if(totalTimeAgg.isCompleted() && ownTimeAgg.isCompleted()) {
         break;
@@ -91,7 +100,7 @@ public class DotTraceStatisticTranslator implements ServiceMessageTranslator {
     @Nullable final BigDecimal prevTotalTime = totalTimeAgg.tryGetAggregatedValue();
     @Nullable final BigDecimal prevOwnTime = ownTimeAgg.tryGetAggregatedValue();
 
-    if(!isMeasuredValueWithinThresholds(prevTotalTime, measuredTotalTime, totalTimeThreshold.getValue())) {
+    if(!myMetricComparer.isMeasuredValueWithinThresholds(prevTotalTime, measuredTotalTime, totalTimeThreshold.getValue())) {
       messages.add(
         new BuildMessage1(
           buildMessage.getSourceId(),
@@ -101,7 +110,7 @@ public class DotTraceStatisticTranslator implements ServiceMessageTranslator {
           createBuildMessageText(prevTotalTime, measuredTotalTime, statisticMessage.getTotalTimeThreshold(), methodName, TOTAL_TIME_THRESHOLD_NAME)));
     }
 
-    if(!isMeasuredValueWithinThresholds(prevOwnTime, measuredOwnTime, ownTimeThreshold.getValue())) {
+    if(!myMetricComparer.isMeasuredValueWithinThresholds(prevOwnTime, measuredOwnTime, ownTimeThreshold.getValue())) {
       messages.add(
         new BuildMessage1(
           buildMessage.getSourceId(),
@@ -134,15 +143,6 @@ public class DotTraceStatisticTranslator implements ServiceMessageTranslator {
     catch (NumberFormatException ignored) {
       return null;
     }
-  }
-
-  private boolean isMeasuredValueWithinThresholds(@Nullable final BigDecimal prevValue, @NotNull final BigDecimal measuredValue, @NotNull final BigDecimal thresholdValue) {
-    if(prevValue == null) {
-      return true;
-    }
-
-    final BigDecimal deviation = measuredValue.subtract(prevValue).multiply(MULTIPLICAND_100).divide(prevValue).abs();
-    return deviation.compareTo(thresholdValue) <= 0;
   }
 
   @NotNull

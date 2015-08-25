@@ -59,7 +59,6 @@ public class BuildPublisher implements ResourcePublisher {
       final String reportContent = myFileService.readAllTextFile(reportFile);
       final Metrics measuredValues = myReportParser.parse(reportContent);
 
-
       for (Metric measuredValue : measuredValues.getMetrics()) {
         final Metric thresholdValue = thresholdValueMap.get(measuredValue.getMethodName());
         if(thresholdValue == null) {
