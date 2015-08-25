@@ -1,6 +1,6 @@
 package jetbrains.buildServer.dotTrace;
 
-import com.sun.istack.internal.NotNull;
+import org.jetbrains.annotations.NotNull;
 
 public enum MeasureType {
   SAMPLING("sampling", "Sampling", "Sampling"),
