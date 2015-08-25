@@ -18,6 +18,7 @@ import jetbrains.buildServer.serverSide.SRunningBuild;
 import jetbrains.buildServer.serverSide.ServerExtensionHolder;
 import jetbrains.buildServer.serverSide.statistics.build.BuildDataStorage;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.BeanFactory;
 
 public class DotTraceStatisticTranslator implements ServiceMessageTranslator {
   private static final BigDecimal MULTIPLICAND_100 = new BigDecimal(100);
@@ -25,17 +26,16 @@ public class DotTraceStatisticTranslator implements ServiceMessageTranslator {
   public static final String DOT_TRACE_OWN_TIME_STATISTIC_KEY = "dot_trace_own_time";
   public static final String TOTAL_TIME_THRESHOLD_NAME = "Total Time";
   public static final String OWN_TIME_THRESHOLD_NAME = "Own Time";
-  private final ServerExtensionHolder myServer;
   private final BuildDataStorage myStorage;
-  private final ValueAggregatorFactory myValueAggregatorFactory;
+  private BeanFactory myBeanFactory;
 
   public DotTraceStatisticTranslator(
     @NotNull final ServerExtensionHolder server,
     @NotNull final BuildDataStorage storage,
-    @NotNull final ValueAggregatorFactory valueAggregatorFactory) {
-    myServer = server;
+    @NotNull final BeanFactory beanFactory) {
+    server.registerExtension(ServiceMessageTranslator.class, getClass().getName(), this);
     myStorage = storage;
-    myValueAggregatorFactory = valueAggregatorFactory;
+    myBeanFactory = beanFactory;
   }
 
   @NotNull
@@ -68,10 +68,11 @@ public class DotTraceStatisticTranslator implements ServiceMessageTranslator {
       return messages;
     }
 
+    final ValueAggregatorFactory valueAggregatorFactory = myBeanFactory.getBean(ValueAggregatorFactory.class);
     final String totalTimeKey = createKey(methodName, DOT_TRACE_TOTAL_TIME_STATISTIC_KEY);
     final String ownTimeKey = createKey(methodName, DOT_TRACE_OWN_TIME_STATISTIC_KEY);
-    final ValueAggregator totalTimeAgg = myValueAggregatorFactory.create(totalTimeThreshold.getType());
-    final ValueAggregator ownTimeAgg = myValueAggregatorFactory.create(ownTimeThreshold.getType());
+    final ValueAggregator totalTimeAgg = valueAggregatorFactory.create(totalTimeThreshold.getType());
+    final ValueAggregator ownTimeAgg = valueAggregatorFactory.create(ownTimeThreshold.getType());
 
     for(SFinishedBuild build: buildType.getHistory()) {
       if(!build.getBuildStatus().isSuccessful()) {

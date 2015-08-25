@@ -9,6 +9,8 @@
 
        <bean class="jetbrains.buildServer.dotTrace.agent.BuildPublisher" id="dotTraceBuildPublisher">
               <constructor-arg ref="dotTraceReportParser"/>
+              <constructor-arg ref="dotTraceThresholdsParser"/>
+              <constructor-arg ref="afterBuildPublisher"/>
        </bean>
 
        <bean class="jetbrains.buildServer.dotTrace.agent.ProcessFilterParser" id="odtTraceProcessFilterParser"/>
