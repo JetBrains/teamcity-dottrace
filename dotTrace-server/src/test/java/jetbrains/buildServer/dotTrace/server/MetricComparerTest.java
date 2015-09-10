@@ -1,8 +1,6 @@
 package jetbrains.buildServer.dotTrace.server;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
 import javax.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 import org.testng.annotations.DataProvider;

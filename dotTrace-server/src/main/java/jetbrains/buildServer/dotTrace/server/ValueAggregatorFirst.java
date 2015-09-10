@@ -10,6 +10,10 @@ public class ValueAggregatorFirst implements ValueAggregator {
 
   @Override
   public void aggregate(@NotNull final BigDecimal value) {
+    if(myIsCompleted) {
+      return;
+    }
+
     myIsCompleted = true;
     myVal = value;
   }

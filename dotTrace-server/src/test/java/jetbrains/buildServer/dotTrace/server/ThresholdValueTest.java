@@ -23,6 +23,11 @@ public class ThresholdValueTest {
       { "50", null},
       { "A-50", null},
       { "-50", null},
+      { null, null},
+      { "", null},
+      { "  ", null},
+      { "Z", null},
+      { "@", null},
     };
   }
 
