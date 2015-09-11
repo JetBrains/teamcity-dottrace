@@ -15,4 +15,20 @@ public class Metrics {
   public List<Metric> getMetrics() {
     return myMetrics;
   }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    final Metrics metrics = (Metrics)o;
+
+    return getMetrics().equals(metrics.getMetrics());
+
+  }
+
+  @Override
+  public int hashCode() {
+    return getMetrics().hashCode();
+  }
 }
