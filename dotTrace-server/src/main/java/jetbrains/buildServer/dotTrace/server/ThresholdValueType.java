@@ -3,6 +3,7 @@ package jetbrains.buildServer.dotTrace.server;
 import org.jetbrains.annotations.Nullable;
 
 public enum ThresholdValueType {
+  SKIPPED,
   FIRST,
   LAST,
   AVERAGE;

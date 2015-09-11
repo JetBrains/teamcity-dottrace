@@ -1,5 +1,6 @@
 package jetbrains.buildServer.dotTrace.server;
 
+import com.intellij.openapi.util.io.StreamUtil;
 import java.math.BigDecimal;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -8,6 +9,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class ThresholdValue {
   private static final Pattern statisticPattern = Pattern.compile("(F|A|L)([0-9,\\.]+)", Pattern.CASE_INSENSITIVE);
+  private static final String SKIPPED_VALUE = "0";
+  private static final ThresholdValue SKIPPED_THRESHOLD_VALUE = new ThresholdValue(ThresholdValueType.SKIPPED, new BigDecimal(0));
 
   private final ThresholdValueType myType;
   private final BigDecimal myValue;
@@ -23,7 +26,12 @@ public class ThresholdValue {
       return null;
     }
 
-    final Matcher matcher = statisticPattern.matcher(valueStr);
+    final String value = valueStr.trim();
+    if(SKIPPED_VALUE.equals(value)) {
+      return SKIPPED_THRESHOLD_VALUE;
+    }
+
+    final Matcher matcher = statisticPattern.matcher(value);
     if(!matcher.find()) {
       return null;
     }

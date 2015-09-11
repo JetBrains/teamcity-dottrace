@@ -28,6 +28,10 @@ public class ThresholdValueTest {
       { "  ", null},
       { "Z", null},
       { "@", null},
+      { "0", new ThresholdValue(ThresholdValueType.SKIPPED, new BigDecimal(0))},
+      { " 0", new ThresholdValue(ThresholdValueType.SKIPPED, new BigDecimal(0))},
+      { "0 ", new ThresholdValue(ThresholdValueType.SKIPPED, new BigDecimal(0))},
+      { " 0 ", new ThresholdValue(ThresholdValueType.SKIPPED, new BigDecimal(0))},
     };
   }
 

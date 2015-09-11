@@ -12,9 +12,11 @@ public class ValueAggregatorFactoryTest {
   private final ValueAggregator myValueAggregatorFirst;
   private final ValueAggregator myValueAggregatorLast;
   private final ValueAggregator myValueAggregatorAverage;
+  private final ValueAggregator myValueAggregatorSkipped;
 
   public ValueAggregatorFactoryTest() {
     myCtx = new Mockery();
+    myValueAggregatorSkipped = myCtx.mock(ValueAggregator.class, "ValueAggregatorSkipped");
     myValueAggregatorFirst = myCtx.mock(ValueAggregator.class, "ValueAggregatorFirst");
     myValueAggregatorLast = myCtx.mock(ValueAggregator.class, "ValueAggregatorLast");
     myValueAggregatorAverage = myCtx.mock(ValueAggregator.class, "ValueAggregatorAverage");
@@ -23,6 +25,7 @@ public class ValueAggregatorFactoryTest {
   @DataProvider(name = "createCases")
   public Object[][] getCreateCases() {
     return new Object[][] {
+      { ThresholdValueType.SKIPPED, myValueAggregatorSkipped },
       { ThresholdValueType.FIRST, myValueAggregatorFirst },
       { ThresholdValueType.LAST, myValueAggregatorLast },
       { ThresholdValueType.AVERAGE, myValueAggregatorAverage },
@@ -45,6 +48,10 @@ public class ValueAggregatorFactoryTest {
   @NotNull
   private ValueAggregatorFactory createInstance()
   {
-    return new ValueAggregatorFactoryImpl(myValueAggregatorFirst, myValueAggregatorLast, myValueAggregatorAverage);
+    return new ValueAggregatorFactoryImpl(
+      myValueAggregatorSkipped,
+      myValueAggregatorFirst,
+      myValueAggregatorLast,
+      myValueAggregatorAverage);
   }
 }
