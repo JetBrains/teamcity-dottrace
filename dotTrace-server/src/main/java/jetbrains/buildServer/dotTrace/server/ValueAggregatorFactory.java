@@ -1,7 +1,9 @@
 package jetbrains.buildServer.dotTrace.server;
 
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 public interface ValueAggregatorFactory {
-  @NotNull ValueAggregator create(@NotNull final ThresholdValueType type);
+  @Nullable
+  ValueAggregator tryCreate(@NotNull final ThresholdValueType type);
 }

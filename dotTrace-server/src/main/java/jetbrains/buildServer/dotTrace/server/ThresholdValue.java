@@ -8,9 +8,9 @@ import javax.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 public class ThresholdValue {
-  private static final Pattern statisticPattern = Pattern.compile("(F|A|L)([0-9,\\.]+)", Pattern.CASE_INSENSITIVE);
-  private static final String SKIPPED_VALUE = "0";
+  private static final Pattern statisticPattern = Pattern.compile("(\\A(F|A|L)([0-9,\\.]+)\\Z)|(\\A[0-9,\\.]+\\Z)", Pattern.CASE_INSENSITIVE);
   private static final ThresholdValue SKIPPED_THRESHOLD_VALUE = new ThresholdValue(ThresholdValueType.SKIPPED, new BigDecimal(0));
+  private static final BigDecimal SKIPPED_DECIMAL_VALUE = new BigDecimal("0");
 
   private final ThresholdValueType myType;
   private final BigDecimal myValue;
@@ -26,27 +26,33 @@ public class ThresholdValue {
       return null;
     }
 
-    final String value = valueStr.trim();
-    if(SKIPPED_VALUE.equals(value)) {
-      return SKIPPED_THRESHOLD_VALUE;
-    }
-
-    final Matcher matcher = statisticPattern.matcher(value);
+    final Matcher matcher = statisticPattern.matcher(valueStr.trim());
     if(!matcher.find()) {
       return null;
     }
 
-    if(matcher.groupCount() != 2) {
+    if(matcher.groupCount() != 4) {
       return null;
     }
 
-    final ThresholdValueType type = ThresholdValueType.tryParse(matcher.group(1));
+    @Nullable
+    final String absoluteValStr = matcher.group(4);
+    if(absoluteValStr != null) {
+      final BigDecimal decimalVal = new BigDecimal(absoluteValStr);
+      if(SKIPPED_DECIMAL_VALUE.equals(decimalVal)) {
+        return SKIPPED_THRESHOLD_VALUE;
+      }
+
+      return new ThresholdValue(ThresholdValueType.ABSOLUTE, decimalVal);
+    }
+
+    final ThresholdValueType type = ThresholdValueType.tryParse(matcher.group(2));
     if(type == null) {
       return null;
     }
 
     try {
-      return new ThresholdValue(type, new BigDecimal(matcher.group(2)));
+      return new ThresholdValue(type, new BigDecimal(matcher.group(3)));
     }
     catch (NumberFormatException ignored) {
     }

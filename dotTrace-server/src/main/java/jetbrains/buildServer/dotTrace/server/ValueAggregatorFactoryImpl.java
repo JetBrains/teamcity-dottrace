@@ -1,31 +1,26 @@
 package jetbrains.buildServer.dotTrace.server;
 
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 public class ValueAggregatorFactoryImpl implements ValueAggregatorFactory {
-  private final ValueAggregator myValueAggregatorSkipped;
   private final ValueAggregator myValueAggregatorFirst;
   private final ValueAggregator myValueAggregatorLast;
   private final ValueAggregator myValueAggregatorAverage;
 
   public ValueAggregatorFactoryImpl(
-    @NotNull final ValueAggregator valueAggregatorSkipped,
     @NotNull final ValueAggregator valueAggregatorFirst,
     @NotNull final ValueAggregator valueAggregatorLast,
     @NotNull final ValueAggregator valueAggregatorAverage) {
-    myValueAggregatorSkipped = valueAggregatorSkipped;
     myValueAggregatorFirst = valueAggregatorFirst;
     myValueAggregatorLast = valueAggregatorLast;
     myValueAggregatorAverage = valueAggregatorAverage;
   }
 
-  @NotNull
+  @Nullable
   @Override
-  public ValueAggregator create(@NotNull final ThresholdValueType type) {
+  public ValueAggregator tryCreate(@NotNull final ThresholdValueType type) {
     switch (type) {
-      case SKIPPED:
-        return myValueAggregatorSkipped;
-
       case FIRST:
         return myValueAggregatorFirst;
 
@@ -36,7 +31,7 @@ public class ValueAggregatorFactoryImpl implements ValueAggregatorFactory {
         return myValueAggregatorAverage;
 
       default:
-        throw new UnsupportedOperationException();
+        return null;
     }
   }
 }

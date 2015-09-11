@@ -67,7 +67,7 @@ public class DotTraceStatisticTranslatorTest {
     final List<SFinishedBuild> builds = Arrays.asList(myBuild1, myBuild2);
     final List<HistoryElement> historyElements = Arrays.asList(myHistoryElement1, myHistoryElement2);
     final StatisticMessage statisticMessage = new StatisticMessage("method1", "L10", "F20", "12", "34");
-    final Statistic statistic = new Statistic(new BigDecimal(1), new BigDecimal(2), new BigDecimal(3), new BigDecimal(4), new BigDecimal(5), new BigDecimal(6));
+    final Statistic statistic = new Statistic(new BigDecimal(1), new BigDecimal(2), new ThresholdValue(ThresholdValueType.LAST, new BigDecimal(3)), new ThresholdValue(ThresholdValueType.LAST, new BigDecimal(4)), new BigDecimal(5), new BigDecimal(6));
 
     myCtx.checking(new Expectations() {{
       oneOf(myServerExtensionHolder).registerExtension(with(ServiceMessageTranslator.class), with(DotTraceStatisticTranslator.class.getName()), with(any(ServiceMessageTranslator.class)));
@@ -84,10 +84,10 @@ public class DotTraceStatisticTranslatorTest {
       oneOf(myStatisticProvider).tryCreateStatistic(statisticMessage, historyElements);
       will(returnValue(statistic));
 
-      oneOf(myMetricComparer).isMeasuredValueWithinThresholds(new BigDecimal(5), new BigDecimal(1), new BigDecimal(3));
+      oneOf(myMetricComparer).isMeasuredValueWithinThresholds(new BigDecimal(5), new BigDecimal(1), new ThresholdValue(ThresholdValueType.LAST, new BigDecimal(3)));
       will(returnValue(false));
 
-      oneOf(myMetricComparer).isMeasuredValueWithinThresholds(new BigDecimal(6), new BigDecimal(2), new BigDecimal(4));
+      oneOf(myMetricComparer).isMeasuredValueWithinThresholds(new BigDecimal(6), new BigDecimal(2), new ThresholdValue(ThresholdValueType.LAST, new BigDecimal(4)));
       will(returnValue(false));
 
       oneOf(myStatisticKeyFactory).createTotalTimeKey("method1");
@@ -135,7 +135,7 @@ public class DotTraceStatisticTranslatorTest {
     final List<SFinishedBuild> builds = Arrays.asList(myBuild1, myBuild2);
     final List<HistoryElement> historyElements = Arrays.asList(myHistoryElement1, myHistoryElement2);
     final StatisticMessage statisticMessage = new StatisticMessage("method1", "L10", "F20", "12", "34");
-    final Statistic statistic = new Statistic(new BigDecimal(1), new BigDecimal(2), new BigDecimal(3), new BigDecimal(4), null, null);
+    final Statistic statistic = new Statistic(new BigDecimal(1), new BigDecimal(2), new ThresholdValue(ThresholdValueType.LAST, new BigDecimal(3)), new ThresholdValue(ThresholdValueType.LAST, new BigDecimal(4)), null, null);
 
     myCtx.checking(new Expectations() {{
       oneOf(myServerExtensionHolder).registerExtension(with(ServiceMessageTranslator.class), with(DotTraceStatisticTranslator.class.getName()), with(any(ServiceMessageTranslator.class)));
@@ -152,10 +152,10 @@ public class DotTraceStatisticTranslatorTest {
       oneOf(myStatisticProvider).tryCreateStatistic(statisticMessage, historyElements);
       will(returnValue(statistic));
 
-      oneOf(myMetricComparer).isMeasuredValueWithinThresholds(null, new BigDecimal(1), new BigDecimal(3));
+      oneOf(myMetricComparer).isMeasuredValueWithinThresholds(null, new BigDecimal(1), new ThresholdValue(ThresholdValueType.LAST, new BigDecimal(3)));
       will(returnValue(false));
 
-      oneOf(myMetricComparer).isMeasuredValueWithinThresholds(null, new BigDecimal(2), new BigDecimal(4));
+      oneOf(myMetricComparer).isMeasuredValueWithinThresholds(null, new BigDecimal(2), new ThresholdValue(ThresholdValueType.LAST, new BigDecimal(4)));
       will(returnValue(false));
 
       oneOf(myStatisticKeyFactory).createTotalTimeKey("method1");
@@ -203,7 +203,7 @@ public class DotTraceStatisticTranslatorTest {
     final List<SFinishedBuild> builds = Arrays.asList(myBuild1, myBuild2);
     final List<HistoryElement> historyElements = Arrays.asList(myHistoryElement1, myHistoryElement2);
     final StatisticMessage statisticMessage = new StatisticMessage("method1", "L10", "F20", "12", "34");
-    final Statistic statistic = new Statistic(new BigDecimal(1), new BigDecimal(2), new BigDecimal(3), new BigDecimal(4), new BigDecimal(5), new BigDecimal(6));
+    final Statistic statistic = new Statistic(new BigDecimal(1), new BigDecimal(2), new ThresholdValue(ThresholdValueType.LAST, new BigDecimal(3)), new ThresholdValue(ThresholdValueType.LAST, new BigDecimal(4)), new BigDecimal(5), new BigDecimal(6));
 
     myCtx.checking(new Expectations() {{
       oneOf(myServerExtensionHolder).registerExtension(with(ServiceMessageTranslator.class), with(DotTraceStatisticTranslator.class.getName()), with(any(ServiceMessageTranslator.class)));
@@ -220,10 +220,10 @@ public class DotTraceStatisticTranslatorTest {
       oneOf(myStatisticProvider).tryCreateStatistic(statisticMessage, historyElements);
       will(returnValue(statistic));
 
-      oneOf(myMetricComparer).isMeasuredValueWithinThresholds(new BigDecimal(5), new BigDecimal(1), new BigDecimal(3));
+      oneOf(myMetricComparer).isMeasuredValueWithinThresholds(new BigDecimal(5), new BigDecimal(1), new ThresholdValue(ThresholdValueType.LAST, new BigDecimal(3)));
       will(returnValue(false));
 
-      oneOf(myMetricComparer).isMeasuredValueWithinThresholds(new BigDecimal(6), new BigDecimal(2), new BigDecimal(4));
+      oneOf(myMetricComparer).isMeasuredValueWithinThresholds(new BigDecimal(6), new BigDecimal(2), new ThresholdValue(ThresholdValueType.LAST, new BigDecimal(4)));
       will(returnValue(true));
 
       oneOf(myStatisticKeyFactory).createTotalTimeKey("method1");
@@ -254,7 +254,7 @@ public class DotTraceStatisticTranslatorTest {
     final List<SFinishedBuild> builds = Arrays.asList(myBuild1, myBuild2);
     final List<HistoryElement> historyElements = Arrays.asList(myHistoryElement1, myHistoryElement2);
     final StatisticMessage statisticMessage = new StatisticMessage("method1", "L10", "F20", "12", "34");
-    final Statistic statistic = new Statistic(new BigDecimal(1), new BigDecimal(2), new BigDecimal(3), new BigDecimal(4), new BigDecimal(5), new BigDecimal(6));
+    final Statistic statistic = new Statistic(new BigDecimal(1), new BigDecimal(2), new ThresholdValue(ThresholdValueType.LAST, new BigDecimal(3)), new ThresholdValue(ThresholdValueType.LAST, new BigDecimal(4)), new BigDecimal(5), new BigDecimal(6));
 
     myCtx.checking(new Expectations() {{
       oneOf(myServerExtensionHolder).registerExtension(with(ServiceMessageTranslator.class), with(DotTraceStatisticTranslator.class.getName()), with(any(ServiceMessageTranslator.class)));
@@ -271,10 +271,10 @@ public class DotTraceStatisticTranslatorTest {
       oneOf(myStatisticProvider).tryCreateStatistic(statisticMessage, historyElements);
       will(returnValue(statistic));
 
-      oneOf(myMetricComparer).isMeasuredValueWithinThresholds(new BigDecimal(5), new BigDecimal(1), new BigDecimal(3));
+      oneOf(myMetricComparer).isMeasuredValueWithinThresholds(new BigDecimal(5), new BigDecimal(1), new ThresholdValue(ThresholdValueType.LAST, new BigDecimal(3)));
       will(returnValue(true));
 
-      oneOf(myMetricComparer).isMeasuredValueWithinThresholds(new BigDecimal(6), new BigDecimal(2), new BigDecimal(4));
+      oneOf(myMetricComparer).isMeasuredValueWithinThresholds(new BigDecimal(6), new BigDecimal(2), new ThresholdValue(ThresholdValueType.LAST, new BigDecimal(4)));
       will(returnValue(false));
 
       oneOf(myStatisticKeyFactory).createTotalTimeKey("method1");
@@ -305,7 +305,7 @@ public class DotTraceStatisticTranslatorTest {
     final List<SFinishedBuild> builds = Arrays.asList(myBuild1, myBuild2);
     final List<HistoryElement> historyElements = Arrays.asList(myHistoryElement1, myHistoryElement2);
     final StatisticMessage statisticMessage = new StatisticMessage("method1", "L10", "F20", "12", "34");
-    final Statistic statistic = new Statistic(new BigDecimal(1), new BigDecimal(2), new BigDecimal(3), new BigDecimal(4), new BigDecimal(5), new BigDecimal(6));
+    final Statistic statistic = new Statistic(new BigDecimal(1), new BigDecimal(2), new ThresholdValue(ThresholdValueType.LAST, new BigDecimal(3)), new ThresholdValue(ThresholdValueType.LAST, new BigDecimal(4)), new BigDecimal(5), new BigDecimal(6));
 
     myCtx.checking(new Expectations() {{
       oneOf(myServerExtensionHolder).registerExtension(with(ServiceMessageTranslator.class), with(DotTraceStatisticTranslator.class.getName()), with(any(ServiceMessageTranslator.class)));
@@ -322,10 +322,10 @@ public class DotTraceStatisticTranslatorTest {
       oneOf(myStatisticProvider).tryCreateStatistic(statisticMessage, historyElements);
       will(returnValue(statistic));
 
-      oneOf(myMetricComparer).isMeasuredValueWithinThresholds(new BigDecimal(5), new BigDecimal(1), new BigDecimal(3));
+      oneOf(myMetricComparer).isMeasuredValueWithinThresholds(new BigDecimal(5), new BigDecimal(1), new ThresholdValue(ThresholdValueType.LAST, new BigDecimal(3)));
       will(returnValue(true));
 
-      oneOf(myMetricComparer).isMeasuredValueWithinThresholds(new BigDecimal(6), new BigDecimal(2), new BigDecimal(4));
+      oneOf(myMetricComparer).isMeasuredValueWithinThresholds(new BigDecimal(6), new BigDecimal(2), new ThresholdValue(ThresholdValueType.LAST, new BigDecimal(4)));
       will(returnValue(true));
 
       oneOf(myStatisticKeyFactory).createTotalTimeKey("method1");

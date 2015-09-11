@@ -7,15 +7,15 @@ import org.jetbrains.annotations.NotNull;
 public class Statistic {
   private final BigDecimal myMeasuredTotalTime;
   private final BigDecimal myMeasuredOwnTime;
-  private final BigDecimal myTotalTimeThreshold;
-  private final BigDecimal myOwnTimeThreshold;
+  private final ThresholdValue myTotalTimeThreshold;
+  private final ThresholdValue myOwnTimeThreshold;
   private final BigDecimal myPrevTotalTime;
   private final BigDecimal myPrevOwnTime;
 
   public Statistic(@NotNull final BigDecimal measuredTotalTime,
                    @NotNull final BigDecimal measuredOwnTime,
-                   @NotNull final BigDecimal totalTimeThreshold,
-                   @NotNull final BigDecimal ownTimeThreshold,
+                   @NotNull final ThresholdValue totalTimeThreshold,
+                   @NotNull final ThresholdValue ownTimeThreshold,
                    @Nullable final BigDecimal prevTotalTime,
                    @Nullable final BigDecimal prevOwnTime) {
     myMeasuredTotalTime = measuredTotalTime;
@@ -37,12 +37,12 @@ public class Statistic {
   }
 
   @NotNull
-  public BigDecimal getTotalTimeThreshold() {
+  public ThresholdValue getTotalTimeThreshold() {
     return myTotalTimeThreshold;
   }
 
   @NotNull
-  public BigDecimal getOwnTimeThreshold() {
+  public ThresholdValue getOwnTimeThreshold() {
     return myOwnTimeThreshold;
   }
 

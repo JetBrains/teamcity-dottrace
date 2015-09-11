@@ -4,6 +4,7 @@ import org.jetbrains.annotations.Nullable;
 
 public enum ThresholdValueType {
   SKIPPED,
+  ABSOLUTE,
   FIRST,
   LAST,
   AVERAGE;

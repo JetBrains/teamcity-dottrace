@@ -36,28 +36,27 @@ public class StatisticProviderImpl implements StatisticProvider {
     final String ownTimeKey = myStatisticKeyFactory.createOwnTimeKey(methodName);
 
     final ValueAggregatorFactory valueAggregatorFactory = myBeanFactory.getBean(ValueAggregatorFactory.class);
-    final ValueAggregator totalTimeAgg = valueAggregatorFactory.create(totalTimeThreshold.getType());
-    final ValueAggregator ownTimeAgg = valueAggregatorFactory.create(ownTimeThreshold.getType());
+    final ValueAggregator totalTimeAgg = valueAggregatorFactory.tryCreate(totalTimeThreshold.getType());
+    final ValueAggregator ownTimeAgg = valueAggregatorFactory.tryCreate(ownTimeThreshold.getType());
 
     for(HistoryElement historyElement : historyProviders) {
       @Nullable final BigDecimal totalTimeVal = historyElement.tryGetValue(totalTimeKey);
-      if(totalTimeVal != null) {
+      if(totalTimeAgg != null && totalTimeVal != null) {
         totalTimeAgg.aggregate(totalTimeVal);
       }
 
       @Nullable final BigDecimal ownTimeVal = historyElement.tryGetValue(ownTimeKey);
-      if(ownTimeVal != null) {
+      if(ownTimeAgg != null && ownTimeVal != null) {
         ownTimeAgg.aggregate(ownTimeVal);
       }
 
-      if(totalTimeAgg.isCompleted() && ownTimeAgg.isCompleted()) {
+      if((totalTimeAgg == null || totalTimeAgg.isCompleted()) && (ownTimeAgg == null || ownTimeAgg.isCompleted())) {
         break;
       }
     }
 
-    @Nullable final BigDecimal prevTotalTime = totalTimeAgg.tryGetAggregatedValue();
-    @Nullable final BigDecimal prevOwnTime = ownTimeAgg.tryGetAggregatedValue();
-
-    return new Statistic(measuredTotalTime, measuredOwnTime, totalTimeThreshold.getValue(), ownTimeThreshold.getValue(), prevTotalTime, prevOwnTime);
+    @Nullable final BigDecimal prevTotalTime = totalTimeAgg != null ? totalTimeAgg.tryGetAggregatedValue() : null;
+    @Nullable final BigDecimal prevOwnTime = ownTimeAgg != null ? ownTimeAgg.tryGetAggregatedValue() : null;
+    return new Statistic(measuredTotalTime, measuredOwnTime, totalTimeThreshold, ownTimeThreshold, prevTotalTime, prevOwnTime);
   }
 }
