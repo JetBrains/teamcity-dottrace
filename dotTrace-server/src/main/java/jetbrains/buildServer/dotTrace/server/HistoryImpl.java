@@ -1,8 +1,8 @@
 package jetbrains.buildServer.dotTrace.server;
 
+import com.intellij.util.containers.SortedList;
 import java.math.BigDecimal;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import javax.annotation.Nullable;
 import jetbrains.buildServer.serverSide.SFinishedBuild;
 import jetbrains.buildServer.serverSide.statistics.build.BuildDataStorage;
@@ -19,6 +19,15 @@ public class HistoryImpl implements History {
   @Override
   @NotNull
   public Iterable<HistoryElement> getElements(@NotNull final List<SFinishedBuild> builds) {
+    final SortedList<SFinishedBuild> sortedBuilds = new SortedList<SFinishedBuild>(new Comparator<SFinishedBuild>() {
+      @Override
+      public int compare(final SFinishedBuild o1, final SFinishedBuild o2) {
+        return o1.getFinishDate().compareTo(o2.getFinishDate());
+      }
+    });
+
+    sortedBuilds.addAll(builds);
+
     return new Iterable<HistoryElement>() {
       @Override
       public Iterator<HistoryElement> iterator() {
@@ -27,7 +36,7 @@ public class HistoryImpl implements History {
 
           @Override
           public boolean hasNext() {
-            return index < builds.size();
+            return index < sortedBuilds.size();
           }
 
           @Override
@@ -37,7 +46,7 @@ public class HistoryImpl implements History {
               @Nullable
               @Override
               public BigDecimal tryGetValue(@NotNull final String key) {
-                return myStorage.getValues(builds.get(curIndex)).get(key);
+                return myStorage.getValues(sortedBuilds.get(curIndex)).get(key);
               }
             };
           }
