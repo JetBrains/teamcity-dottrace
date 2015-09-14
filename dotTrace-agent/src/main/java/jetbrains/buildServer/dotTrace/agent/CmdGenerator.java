@@ -31,8 +31,11 @@ public class CmdGenerator implements ResourceGenerator<Context> {
 
   @NotNull
   @Override
-  public String create(final Context ctx) {
-    String dotTracePath = myParametersService.getRunnerParameter(Constants.PATH_VAR);
+  public String create(@NotNull final Context ctx) {
+    File dotTracePath = new File(myParametersService.getRunnerParameter(Constants.PATH_VAR));
+    if(!dotTracePath.isAbsolute()) {
+      dotTracePath = new File(myFileService.getCheckoutDirectory(), dotTracePath.getPath());
+    }
 
     File consoleProfilerFile = new File(dotTracePath, DOT_TRACE_EXE_NAME);
     myFileService.validatePath(consoleProfilerFile);
