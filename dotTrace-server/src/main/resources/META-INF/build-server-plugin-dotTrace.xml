@@ -4,13 +4,11 @@
            xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
            default-autowire="constructor">
   <bean class="jetbrains.buildServer.dotTrace.server.MetricComparerImpl"/>
-  <bean class="jetbrains.buildServer.dotTrace.server.ValueAggregatorSkipped" id="valueAggregatorSkipped"/>
   <bean class="jetbrains.buildServer.dotTrace.server.ValueAggregatorFirst" id="valueAggregatorFirst"/>
   <bean class="jetbrains.buildServer.dotTrace.server.ValueAggregatorLast" id="valueAggregatorLast"/>
   <bean class="jetbrains.buildServer.dotTrace.server.ValueAggregatorAverage" id="valueAggregatorAverage"/>
 
   <bean class="jetbrains.buildServer.dotTrace.server.ValueAggregatorFactoryImpl" scope="prototype">
-    <constructor-arg ref="valueAggregatorSkipped"/>
     <constructor-arg ref="valueAggregatorFirst"/>
     <constructor-arg ref="valueAggregatorLast"/>
     <constructor-arg ref="valueAggregatorAverage"/>
