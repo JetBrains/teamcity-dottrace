@@ -4,7 +4,7 @@ This plugin provides ability to run build step under the [JetBrains dotTrace Com
 
 ## Install ##
 
-To install the plugin, put [zip archive](http://teamcity.jetbrains.com/httpAuth/app/rest/builds/buildType:TeamCityPluginsByJetBrains_DotTrace_Build,pinned:true,status:SUCCESS,branch:dorMemoryUnit-1.0.6/artifacts/content/dotMemoryUnit.zip) to 'plugins' direrctory under TeamCity data directory. Restart the server. JetBrains dotTrace ñommand-line profiler is a free separate tool that contains a self-profiling API. To use JetBrains dotTrace ñommand-line profiler on the TeamCity you should have the JetBrains dotTrace ñommand-line profiler on the each TeamCity agent where you are going to run them. Use the following [link](https://www.nuget.org/packages/JetBrains.DotMemoryUnit/) to download JetBrains dotTrace command line tools, see Related downloads, dotTrace command line tools.
+To install the plugin, put [zip archive](http://teamcity.jetbrains.com/httpAuth/app/rest/builds/buildType:TeamCityPluginsByJetBrains_DotTrace_Build,pinned:true,status:SUCCESS,branch:master/artifacts/content/dotTrace.zip) to 'plugins' direrctory under TeamCity data directory. Restart the server. JetBrains dotTrace Ã±ommand-line profiler is a free separate tool that contains a self-profiling API. To use JetBrains dotTrace Ã±ommand-line profiler on the TeamCity you should have the JetBrains dotTrace Ã±ommand-line profiler on the each TeamCity agent where you are going to run them.
 
 ## Implemention ##
 
@@ -16,7 +16,7 @@ Use 'mvn package' command from the root project to build your plugin. Resulting 
 
 ## License ##
 
-JetBrains dotTrace plugin for TeamCity is under the [Apache License](https://github.com/JetBrains/teamcity-dotmemory/blob/master/LICENSE).
+JetBrains dotTrace plugin for TeamCity is under the [Apache License](https://github.com/JetBrains/teamcity-dottrace/blob/master/LICENSE).
 
 ## Contributors ##
 
