@@ -1,0 +1,5 @@
+build/
+dotTrace-server/target/
+dotTrace-agent/target/
+dotTrace-common/target/
+target/
