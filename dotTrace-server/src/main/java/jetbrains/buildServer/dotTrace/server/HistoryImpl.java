@@ -3,7 +3,7 @@ package jetbrains.buildServer.dotTrace.server;
 import com.intellij.util.containers.SortedList;
 import java.math.BigDecimal;
 import java.util.*;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import jetbrains.buildServer.serverSide.SFinishedBuild;
 import jetbrains.buildServer.serverSide.statistics.build.BuildDataStorage;
 import org.jetbrains.annotations.NotNull;

@@ -1,7 +1,7 @@
 package jetbrains.buildServer.dotTrace.server;
 
 import java.math.BigDecimal;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import jetbrains.buildServer.dotTrace.StatisticMessage;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.BeanFactory;

@@ -2,7 +2,7 @@ package jetbrains.buildServer.dotTrace.server;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 public class MetricComparerImpl implements MetricComparer {

@@ -3,7 +3,7 @@ package jetbrains.buildServer.dotTrace.server;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 public class ValueAggregatorAverage implements ValueAggregator {

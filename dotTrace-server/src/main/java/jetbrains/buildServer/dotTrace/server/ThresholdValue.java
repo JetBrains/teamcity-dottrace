@@ -4,7 +4,7 @@ import com.intellij.openapi.util.io.StreamUtil;
 import java.math.BigDecimal;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 public class ThresholdValue {

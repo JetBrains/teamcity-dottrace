@@ -1,6 +1,6 @@
 package jetbrains.buildServer.dotTrace.server;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 public class ValueAggregatorFactoryImpl implements ValueAggregatorFactory {

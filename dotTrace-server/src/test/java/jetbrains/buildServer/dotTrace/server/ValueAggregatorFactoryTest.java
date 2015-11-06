@@ -1,6 +1,6 @@
 package jetbrains.buildServer.dotTrace.server;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 import org.jmock.Mockery;
 import org.testng.annotations.DataProvider;

@@ -2,7 +2,7 @@ package jetbrains.buildServer.dotTrace.server;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;

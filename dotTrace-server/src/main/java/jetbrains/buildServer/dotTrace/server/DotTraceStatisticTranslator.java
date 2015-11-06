@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import jetbrains.buildServer.dotTrace.StatisticMessage;
 import jetbrains.buildServer.messages.BuildMessage1;
 import jetbrains.buildServer.messages.Status;
