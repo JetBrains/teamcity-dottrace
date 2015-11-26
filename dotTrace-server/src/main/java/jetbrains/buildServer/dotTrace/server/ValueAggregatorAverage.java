@@ -1,6 +1,7 @@
 package jetbrains.buildServer.dotTrace.server;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import org.jetbrains.annotations.Nullable;
@@ -36,6 +37,6 @@ public class ValueAggregatorAverage implements ValueAggregator {
       sum = sum.add(myVals.get(i));
     }
 
-    return sum.divide(new BigDecimal(size));
+    return sum.divide(new BigDecimal(size), 4, RoundingMode.HALF_UP);
   }
 }

@@ -13,10 +13,12 @@
               <constructor-arg ref="afterBuildPublisher"/>
        </bean>
 
-       <bean class="jetbrains.buildServer.dotTrace.agent.ProcessFilterParser" id="odtTraceProcessFilterParser"/>
+       <bean class="jetbrains.buildServer.dotTrace.agent.DotTraceSnapshotsPublisher" id="dotTraceSnapshotsPublisher"/>
+
+       <bean class="jetbrains.buildServer.dotTrace.agent.ProcessFilterParser" id="dotTraceProcessFilterParser"/>
 
        <bean class="jetbrains.buildServer.dotTrace.agent.ProjectGenerator" id="dotTraceProjectGenerator">
-              <constructor-arg ref="odtTraceProcessFilterParser"/>
+              <constructor-arg ref="dotTraceProcessFilterParser"/>
        </bean>
        <bean class="jetbrains.buildServer.dotTrace.agent.PatternsGenerator" id="dotTracePatternsGenerator">
               <constructor-arg ref="dotTraceThresholdsParser"/>
@@ -29,6 +31,7 @@
               <constructor-arg ref="dotTraceCmdGenerator"/>
               <constructor-arg ref="beforeBuildPublisher"/>
               <constructor-arg ref="dotTraceBuildPublisher"/>
+              <constructor-arg ref="dotTraceSnapshotsPublisher"/>
        </bean>
 
        <bean class="jetbrains.buildServer.dotNet.buildRunner.agent.BuildCommandLineProcessorAdapterImpl" id="dotTraceBuildCommandLineProcessor">

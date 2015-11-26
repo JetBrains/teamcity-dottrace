@@ -2,6 +2,7 @@ package jetbrains.buildServer.dotTrace.server;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import org.assertj.core.data.Offset;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 import org.testng.annotations.DataProvider;
@@ -17,6 +18,7 @@ public class ValueAggregatorAverageTest {
       { Arrays.asList(), false, null },
       { Arrays.asList(new BigDecimal(1), new BigDecimal(2), new BigDecimal(3)), false, new BigDecimal(2) },
       { Arrays.asList(new BigDecimal(1), new BigDecimal(2), new BigDecimal(3), new BigDecimal(2), new BigDecimal(7)), false, new BigDecimal(3) },
+      { Arrays.asList(new BigDecimal(1), new BigDecimal(2), new BigDecimal(2)), false, new BigDecimal(1.6667) },
     };
   }
 
@@ -33,7 +35,12 @@ public class ValueAggregatorAverageTest {
 
     // Then
     then(instance.isCompleted()).isEqualTo(expectedIsCompleted);
-    then(instance.tryGetAggregatedValue()).isEqualTo(expectedAggregatedValue);
+    if(expectedAggregatedValue == null) {
+      then(instance.tryGetAggregatedValue()).isNull();
+    }
+    else {
+      then(instance.tryGetAggregatedValue()).isCloseTo(expectedAggregatedValue, Offset.offset(new BigDecimal(.0001)));
+    }
   }
 
   @NotNull

@@ -1,6 +1,5 @@
 package jetbrains.buildServer.dotTrace.server;
 
-import java.util.List;
 import jetbrains.buildServer.dotTrace.Constants;
 import jetbrains.buildServer.dotTrace.MeasureType;
 import org.jetbrains.annotations.NotNull;
@@ -36,6 +35,11 @@ public class DotTraceBean {
   @NotNull
   public String getProcessFiltersKey() {
     return Constants.PROCESS_FILTERS_VAR;
+  }
+
+  @NotNull
+  public String getSnapshotsPathKey() {
+    return Constants.SNAPSHOTS_PATH_VAR;
   }
 
   @NotNull

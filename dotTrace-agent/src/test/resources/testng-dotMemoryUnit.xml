@@ -10,6 +10,7 @@
       <class name="jetbrains.buildServer.dotTrace.agent.BuildPublisherTest"/>
       <class name="jetbrains.buildServer.dotTrace.agent.ProcessFilterParserTest"/>
       <class name="jetbrains.buildServer.dotTrace.agent.ReportParserTest"/>
+      <class name="jetbrains.buildServer.dotTrace.agent.DotTraceSnapshotsPublisherTest"/>
     </classes>
   </test>
 </suite>

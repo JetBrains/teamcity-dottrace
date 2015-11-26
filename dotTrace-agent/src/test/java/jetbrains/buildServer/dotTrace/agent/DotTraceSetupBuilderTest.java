@@ -26,6 +26,7 @@ public class DotTraceSetupBuilderTest {
   private ResourcePublisher myDotTraceBuildPublisher;
   private ResourceGenerator<Context> myPatternsGenerator;
   private ResourceGenerator<Context> myCmdGenerator;
+  private ResourcePublisher myDotTraceSnapshotsPublisher;
 
   @BeforeMethod
   public void setUp()
@@ -42,6 +43,7 @@ public class DotTraceSetupBuilderTest {
     myRunnerParametersService = myCtx.mock(RunnerParametersService.class);
     myBeforeBuildPublisher = myCtx.mock(ResourcePublisher.class, "beforeBuildPublisher");
     myDotTraceBuildPublisher = myCtx.mock(ResourcePublisher.class, "dotTraceBuildPublisher");
+    myDotTraceSnapshotsPublisher = myCtx.mock(ResourcePublisher.class, "dotTraceSnapshotsPublisher");
     myCommandLineResource = myCtx.mock(CommandLineResource.class);
     myFileService = myCtx.mock(FileService.class);
     myAssertions = myCtx.mock(RunnerAssertions.class);
@@ -105,7 +107,8 @@ public class DotTraceSetupBuilderTest {
       new CommandLineFile(myBeforeBuildPublisher, projectFile, "project's content"),
       new CommandLineFile(myBeforeBuildPublisher, patternsFile, "patterns' content"),
       new CommandLineFile(myBeforeBuildPublisher, cmdFile, "cmd's content"),
-      new CommandLineArtifact(myDotTraceBuildPublisher, reportFile));
+      new CommandLineArtifact(myDotTraceBuildPublisher, reportFile),
+      new CommandLineArtifact(myDotTraceSnapshotsPublisher, snapshotFile));
   }
 
   @DataProvider(name = "runnerParamUseDotTraceCases")
@@ -171,6 +174,7 @@ public class DotTraceSetupBuilderTest {
       myCmdGenerator,
       myBeforeBuildPublisher,
       myDotTraceBuildPublisher,
+      myDotTraceSnapshotsPublisher,
       myRunnerParametersService,
       myFileService,
       myAssertions);

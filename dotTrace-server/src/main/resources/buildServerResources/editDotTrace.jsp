@@ -18,6 +18,7 @@
         $j('#dotTraceProfileChildProcessesContainer').removeClass("hidden");
         $j('#dotTraceProcessFiltersContainer').removeClass("hidden");
         $j('#dotTraceThresholdsContainer').removeClass("hidden");
+        $j('#dotTraceSnapshotPathContainer').removeClass("hidden");
       }
       else {
         $j('#dotTracePathContainer').addClass("hidden");
@@ -25,13 +26,10 @@
         $j('#dotTraceProfileChildProcessesContainer').addClass("hidden");
         $j('#dotTraceProcessFiltersContainer').addClass("hidden");
         $j('#dotTraceThresholdsContainer').addClass("hidden");
+        $j('#dotTraceSnapshotPathContainer').addClass("hidden");
       }
 
-      BS.VisibilityHandlers.updateVisibility($('dotTracePathContainer'));
-      BS.VisibilityHandlers.updateVisibility($('dotTraceMeasureTypeContainer'));
-      BS.VisibilityHandlers.updateVisibility($('dotTraceProfileChildProcessesContainer'));
-      BS.VisibilityHandlers.updateVisibility($('dotTraceProcessFiltersContainer'));
-      BS.VisibilityHandlers.updateVisibility($('dotTraceThresholdsContainer'));
+      BS.VisibilityHandlers.updateVisibility($('runnerParams'));
     },
 
     showHomePage: function() {
@@ -51,13 +49,13 @@
   </tr>
 
   <tr id="dotTracePathContainer" class="hidden">
-    <th><label for="${bean.pathKey}">Path to dotTrace: <l:star/></label></th>
+    <th><label for="${bean.pathKey}">Path to dotTrace ConsoleProfiler.exe: <l:star/></label></th>
     <td>
       <div class="completionIconWrapper">
         <props:textProperty name="${bean.pathKey}" className="longField"/>
       </div>
       <span class="error" id="error_${bean.pathKey}"></span>
-      <span class="smallNote">Specify path to dotTrace.exe</span>
+      <span class="smallNote">Specify path to dotTrace ConsoleProfiler.exe</span>
     </td>
   </tr>
 
@@ -96,6 +94,17 @@
         <br/><i>*service.exe</i>
         <br/><i>testRunner*.exe</i>
       </span>
+    </td>
+  </tr>
+
+  <tr id="dotTraceSnapshotPathContainer" class="advancedSetting hidden">
+    <th><label for="${bean.snapshotsPathKey}">Performance snapshot artifacts path:</label></th>
+    <td>
+      <div class="completionIconWrapper">
+        <props:textProperty name="${bean.snapshotsPathKey}" className="longField"/>
+      </div>
+      <span class="error" id="error_${bean.snapshotsPathKey}"></span>
+      <span class="smallNote">JetBrains dotTrace produces a performance snapshot. Please specify relative path in build artifacts where this snapshot should be uploaded.</span>
     </td>
   </tr>
 

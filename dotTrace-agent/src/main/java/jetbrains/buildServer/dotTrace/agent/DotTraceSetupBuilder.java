@@ -22,6 +22,7 @@ public class DotTraceSetupBuilder implements CommandLineSetupBuilder {
   private final ResourceGenerator<Context> myCmdGenerator;
   private final ResourcePublisher myBeforeBuildPublisher;
   private final ResourcePublisher myDotTraceBuildPublisher;
+  private final ResourcePublisher myDotTraceSnapshotsPublisher;
   private final RunnerParametersService myParametersService;
   private final FileService myFileService;
   private final RunnerAssertions myAssertions;
@@ -32,6 +33,7 @@ public class DotTraceSetupBuilder implements CommandLineSetupBuilder {
     @NotNull final ResourceGenerator<Context> cmdGenerator,
     @NotNull final ResourcePublisher beforeBuildPublisher,
     @NotNull final ResourcePublisher dotTraceBuildPublisher,
+    @NotNull final ResourcePublisher dotTraceSnapshotsPublisher,
     @NotNull final RunnerParametersService parametersService,
     @NotNull final FileService fileService,
     @NotNull final RunnerAssertions assertions) {
@@ -40,6 +42,7 @@ public class DotTraceSetupBuilder implements CommandLineSetupBuilder {
     myCmdGenerator = cmdGenerator;
     myBeforeBuildPublisher = beforeBuildPublisher;
     myDotTraceBuildPublisher = dotTraceBuildPublisher;
+    myDotTraceSnapshotsPublisher = dotTraceSnapshotsPublisher;
     myParametersService = parametersService;
     myFileService = fileService;
     myAssertions = assertions;
@@ -69,6 +72,7 @@ public class DotTraceSetupBuilder implements CommandLineSetupBuilder {
     resources.add(new CommandLineFile(myBeforeBuildPublisher, patternsFile, myPatternGenerator.create(ctx)));
     resources.add(new CommandLineFile(myBeforeBuildPublisher, cmdFile, myCmdGenerator.create(ctx)));
     resources.add(new CommandLineArtifact(myDotTraceBuildPublisher, reportFile));
+    resources.add(new CommandLineArtifact(myDotTraceSnapshotsPublisher, snapshotFile));
 
     return Collections.singleton(new CommandLineSetup(cmdFile.getPath(), Collections.<CommandLineArgument>emptyList(), resources));
   }

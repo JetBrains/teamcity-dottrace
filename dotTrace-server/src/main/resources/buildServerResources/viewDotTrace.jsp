@@ -8,7 +8,7 @@
 </div>
 
 <div class="parameter">
-  Path to dotTrace: <props:displayValue name="${bean.pathKey}" emptyValue="<empty>"/>
+  Path to dotTrace ConsoleProfiler.exe: <props:displayValue name="${bean.pathKey}" emptyValue="<empty>"/>
 </div>
 
 <div class="parameter">
@@ -21,6 +21,10 @@
 
 <div class="parameter">
   Filter processes: <props:displayValue name="${bean.processFiltersKey}" emptyValue="<empty>"/>
+</div>
+
+<div class="parameter">
+  Path for storing performance snapshot: <props:displayValue name="${bean.snapshotsPathKey}" emptyValue="<empty>"/>
 </div>
 
 <div class="parameter">
