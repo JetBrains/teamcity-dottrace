@@ -361,7 +361,7 @@ public class StatisticProviderTest {
   }
 
   @Test
-  public void shouldNotAggregateWhenItCantBeAggregated() {
+  public void shouldUseAbsoluteValueAsExpectedWhenAbsoluteThreshold() {
     // Given
     myCtx.checking(new Expectations() {{
       oneOf(myBeanFactory).getBean(ValueAggregatorFactory.class);
@@ -414,7 +414,7 @@ public class StatisticProviderTest {
 
     // Then
     myCtx.assertIsSatisfied();
-    then(statistic).isEqualTo(new Statistic(MEASURED_TOTAL_TIME, MEASURED_OWN_TIME, TOTAL_TIME_THRESHOLD, new ThresholdValue(ThresholdValueType.ABSOLUTE, new BigDecimal(99)), PREV_TOTAL_TIME, null));
+    then(statistic).isEqualTo(new Statistic(MEASURED_TOTAL_TIME, MEASURED_OWN_TIME, TOTAL_TIME_THRESHOLD, new ThresholdValue(ThresholdValueType.ABSOLUTE, new BigDecimal(99)), PREV_TOTAL_TIME, new BigDecimal(99)));
   }
 
   @NotNull

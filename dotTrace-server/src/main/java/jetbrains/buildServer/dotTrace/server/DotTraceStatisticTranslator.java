@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
-import org.jetbrains.annotations.Nullable;
 import jetbrains.buildServer.dotTrace.StatisticMessage;
 import jetbrains.buildServer.messages.BuildMessage1;
 import jetbrains.buildServer.messages.Status;
@@ -64,24 +63,26 @@ public class DotTraceStatisticTranslator implements ServiceMessageTranslator {
     final String methodName = statisticMessage.getMethodName();
     final Statistic statistic = myStatisticProvider.tryCreateStatistic(statisticMessage, myHistory.getElements(buildType.getHistory()));
     if(statistic != null) {
-      if (!myMetricComparer.isMeasuredValueWithinThresholds(statistic.getPrevTotalTime(), statistic.getMeasuredTotalTime(), statistic.getTotalTimeThreshold())) {
+      final BigDecimal prevTotalTime = statistic.getPrevTotalTime();
+      if (prevTotalTime != null && !myMetricComparer.isMeasuredValueWithinThresholds(prevTotalTime, statistic.getMeasuredTotalTime(), statistic.getTotalTimeThreshold())) {
         messages.add(
           new BuildMessage1(
             buildMessage.getSourceId(),
             buildMessage.getTypeId(),
             Status.FAILURE,
             buildMessage.getTimestamp(),
-            createBuildMessageText(statistic.getPrevTotalTime(), statistic.getMeasuredTotalTime(), statisticMessage.getTotalTimeThreshold(), methodName, TOTAL_TIME_THRESHOLD_NAME)));
+            createBuildMessageText(statistic.getPrevTotalTime(), statistic.getMeasuredTotalTime(), methodName, TOTAL_TIME_THRESHOLD_NAME)));
       }
 
-      if (!myMetricComparer.isMeasuredValueWithinThresholds(statistic.getPrevOwnTime(), statistic.getMeasuredOwnTime(), statistic.getOwnTimeThreshold())) {
+      final BigDecimal prevOwnTime = statistic.getPrevOwnTime();
+      if (prevOwnTime != null && !myMetricComparer.isMeasuredValueWithinThresholds(prevOwnTime, statistic.getMeasuredOwnTime(), statistic.getOwnTimeThreshold())) {
         messages.add(
           new BuildMessage1(
             buildMessage.getSourceId(),
             buildMessage.getTypeId(),
             Status.FAILURE,
             buildMessage.getTimestamp(),
-            createBuildMessageText(statistic.getPrevOwnTime(), statistic.getMeasuredOwnTime(), statisticMessage.getOwnTimeThreshold(), methodName, OWN_TIME_THRESHOLD_NAME)));
+            createBuildMessageText(statistic.getPrevOwnTime(), statistic.getMeasuredOwnTime(), methodName, OWN_TIME_THRESHOLD_NAME)));
       }
 
       final long buildId = runningBuild.getBuildId();
@@ -93,13 +94,7 @@ public class DotTraceStatisticTranslator implements ServiceMessageTranslator {
   }
 
   @NotNull
-  private String createBuildMessageText(@Nullable final BigDecimal prevValue, @NotNull final BigDecimal measuredValue, @NotNull final String threshold, @NotNull final String methodName, @NotNull final String valueDescription) {
-    if(prevValue == null) {
-      return String.format("%s exceeded the performance threshold \"%s\" for %s", methodName, threshold, valueDescription);
-    }
-
-    final String prevValueStr = prevValue.toString();
-    final String measuredValueStr = measuredValue.toString();
-    return String.format("%s exceeded the performance threshold \"%s\" for %s: the base value is %s, actual value is %s", methodName, threshold, valueDescription, prevValueStr, measuredValueStr);
+  private String createBuildMessageText(@NotNull final BigDecimal prevValue, @NotNull final BigDecimal measuredValue, @NotNull final String methodName, @NotNull final String valueDescription) {
+    return String.format("FAILED: %s\n\t%s, ms [expected: %s | measured: %s]", methodName, valueDescription, prevValue, measuredValue);
   }
 }

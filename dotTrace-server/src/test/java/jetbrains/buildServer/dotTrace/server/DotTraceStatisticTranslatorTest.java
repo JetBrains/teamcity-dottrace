@@ -130,7 +130,7 @@ public class DotTraceStatisticTranslatorTest {
   }
 
   @Test
-  public void shouldTranslateWhenPrevValuesAreNull() {
+  public void shouldNotSendBuildProblemsWhenPrevValuesAreNull() {
     // Given
     final List<SFinishedBuild> builds = Arrays.asList(myBuild1, myBuild2);
     final List<HistoryElement> historyElements = Arrays.asList(myHistoryElement1, myHistoryElement2);
@@ -152,12 +152,6 @@ public class DotTraceStatisticTranslatorTest {
       oneOf(myStatisticProvider).tryCreateStatistic(statisticMessage, historyElements);
       will(returnValue(statistic));
 
-      oneOf(myMetricComparer).isMeasuredValueWithinThresholds(null, new BigDecimal(1), new ThresholdValue(ThresholdValueType.LAST, new BigDecimal(3)));
-      will(returnValue(false));
-
-      oneOf(myMetricComparer).isMeasuredValueWithinThresholds(null, new BigDecimal(2), new ThresholdValue(ThresholdValueType.LAST, new BigDecimal(4)));
-      will(returnValue(false));
-
       oneOf(myStatisticKeyFactory).createTotalTimeKey("method1");
       will(returnValue("TotalTimeKey"));
 
@@ -177,24 +171,8 @@ public class DotTraceStatisticTranslatorTest {
 
     // Then
     myCtx.assertIsSatisfied();
-    then(messages.size()).isEqualTo(3);
+    then(messages.size()).isEqualTo(1);
     then(messages.get(0)).isEqualTo(buildMessage1);
-
-    final BuildMessage1 message1 = messages.get(1);
-    then(message1.getSourceId()).isEqualTo(buildMessage1.getSourceId());
-    then(message1.getTypeId()).isEqualTo(buildMessage1.getTypeId());
-    then(message1.getStatus()).isEqualTo(Status.FAILURE);
-    then(message1.getTimestamp()).isEqualTo(buildMessage1.getTimestamp());
-    then(message1.getValue()).isNotNull();
-    then(message1.getValue()).isInstanceOf(String.class);
-
-    final BuildMessage1 message2 = messages.get(2);
-    then(message2.getSourceId()).isEqualTo(buildMessage1.getSourceId());
-    then(message2.getTypeId()).isEqualTo(buildMessage1.getTypeId());
-    then(message2.getStatus()).isEqualTo(Status.FAILURE);
-    then(message2.getTimestamp()).isEqualTo(buildMessage1.getTimestamp());
-    then(message2.getValue()).isNotNull();
-    then(message2.getValue()).isInstanceOf(String.class);
   }
 
   @Test

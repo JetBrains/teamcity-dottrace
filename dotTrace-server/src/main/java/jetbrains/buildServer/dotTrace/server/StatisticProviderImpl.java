@@ -41,12 +41,12 @@ public class StatisticProviderImpl implements StatisticProvider {
 
     for(HistoryElement historyElement : historyProviders) {
       @Nullable final BigDecimal totalTimeVal = historyElement.tryGetValue(totalTimeKey);
-      if(totalTimeAgg != null && totalTimeVal != null) {
+      if(totalTimeAgg != null && totalTimeVal != null && BigDecimal.ZERO.compareTo(totalTimeVal) < 0) {
         totalTimeAgg.aggregate(totalTimeVal);
       }
 
       @Nullable final BigDecimal ownTimeVal = historyElement.tryGetValue(ownTimeKey);
-      if(ownTimeAgg != null && ownTimeVal != null) {
+      if(ownTimeAgg != null && ownTimeVal != null && BigDecimal.ZERO.compareTo(ownTimeVal) < 0) {
         ownTimeAgg.aggregate(ownTimeVal);
       }
 
@@ -55,8 +55,17 @@ public class StatisticProviderImpl implements StatisticProvider {
       }
     }
 
-    @Nullable final BigDecimal prevTotalTime = totalTimeAgg != null ? totalTimeAgg.tryGetAggregatedValue() : null;
-    @Nullable final BigDecimal prevOwnTime = ownTimeAgg != null ? ownTimeAgg.tryGetAggregatedValue() : null;
+    @Nullable final BigDecimal prevTotalTime = GetPrevValue(totalTimeAgg, totalTimeThreshold);
+    @Nullable final BigDecimal prevOwnTime = GetPrevValue(ownTimeAgg, ownTimeThreshold);
     return new Statistic(measuredTotalTime, measuredOwnTime, totalTimeThreshold, ownTimeThreshold, prevTotalTime, prevOwnTime);
+  }
+
+
+  @Nullable
+  private BigDecimal GetPrevValue(@Nullable final ValueAggregator timeAgg, @NotNull final ThresholdValue timeThreshold)
+  {
+    return timeAgg != null
+            ? timeAgg.tryGetAggregatedValue()
+            : timeThreshold.getType() == ThresholdValueType.ABSOLUTE ? timeThreshold.getValue() : null;
   }
 }

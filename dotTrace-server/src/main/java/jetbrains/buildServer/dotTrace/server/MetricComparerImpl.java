@@ -2,14 +2,13 @@ package jetbrains.buildServer.dotTrace.server;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 public class MetricComparerImpl implements MetricComparer {
   private static final BigDecimal MULTIPLICAND_100 = new BigDecimal(100);
 
   @Override
-  public boolean isMeasuredValueWithinThresholds(@Nullable final BigDecimal prevValue, @NotNull final BigDecimal measuredValue, @NotNull final ThresholdValue threshold) {
+  public boolean isMeasuredValueWithinThresholds(@NotNull final BigDecimal prevValue, @NotNull final BigDecimal measuredValue, @NotNull final ThresholdValue threshold) {
     switch (threshold.getType()) {
       case SKIPPED:
         return true;
@@ -20,7 +19,7 @@ public class MetricComparerImpl implements MetricComparer {
       case FIRST:
       case LAST:
       case AVERAGE:
-        if(prevValue == null || prevValue.compareTo(BigDecimal.ZERO) == 0) {
+        if(prevValue.compareTo(BigDecimal.ZERO) == 0) {
           return true;
         }
 
