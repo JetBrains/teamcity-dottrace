@@ -4,7 +4,7 @@
   <parent>
     <artifactId>dotTrace</artifactId>
     <groupId>org.jetbrains.teamcity.plugins</groupId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
   </parent>
   <artifactId>dotTrace-agent</artifactId>
   <packaging>jar</packaging>
@@ -13,7 +13,7 @@
     <dependency>
       <groupId>org.jetbrains.teamcity.plugins</groupId>
       <artifactId>dotTrace-common</artifactId>
-      <version>1.0.0</version>
+      <version>1.0.1</version>
       <scope>compile</scope>
     </dependency>
 
