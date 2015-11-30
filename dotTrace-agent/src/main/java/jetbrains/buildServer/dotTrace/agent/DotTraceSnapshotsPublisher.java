@@ -2,10 +2,8 @@ package jetbrains.buildServer.dotTrace.agent;
 
 import com.intellij.openapi.util.text.StringUtil;
 import java.io.File;
-import jetbrains.buildServer.dotNet.buildRunner.agent.CommandLineExecutionContext;
-import jetbrains.buildServer.dotNet.buildRunner.agent.LoggerService;
-import jetbrains.buildServer.dotNet.buildRunner.agent.ResourcePublisher;
-import jetbrains.buildServer.dotNet.buildRunner.agent.RunnerParametersService;
+import java.util.*;
+import jetbrains.buildServer.dotNet.buildRunner.agent.*;
 import jetbrains.buildServer.dotTrace.Constants;
 import jetbrains.buildServer.messages.serviceMessages.PublishArtifacts;
 import org.jetbrains.annotations.NotNull;
@@ -13,12 +11,15 @@ import org.jetbrains.annotations.NotNull;
 public class DotTraceSnapshotsPublisher implements ResourcePublisher {
   private final LoggerService myLoggerService;
   private final RunnerParametersService myParametersService;
+  private final FileService myFileService;
 
   public DotTraceSnapshotsPublisher(
     @NotNull final LoggerService loggerService,
-    @NotNull final RunnerParametersService parametersService) {
+    @NotNull final RunnerParametersService parametersService,
+    @NotNull final FileService fileService) {
     myLoggerService = loggerService;
     myParametersService = parametersService;
+    myFileService = fileService;
   }
 
   @Override
@@ -32,8 +33,19 @@ public class DotTraceSnapshotsPublisher implements ResourcePublisher {
       return;
     }
 
+    final List<File> snapshots = new ArrayList<File>();
+    final File parentDir = file.getParentFile();
+    if(parentDir == null) {
+      snapshots.add(file);
+    }
+    else {
+      snapshots.addAll(Arrays.asList(myFileService.listFiles(parentDir)));
+    }
+
     final File snapshotsTargetDirectory = new File(snapshotsTargetDirectoryStr);
-    final String artifactPath = String.format("%s => %s", file.getPath(), snapshotsTargetDirectory.getPath());
-    myLoggerService.onMessage(new PublishArtifacts(artifactPath));
+    for(File snapshot: snapshots) {
+      final String artifactPath = String.format("%s => %s", snapshot.getPath(), snapshotsTargetDirectory.getPath());
+      myLoggerService.onMessage(new PublishArtifacts(artifactPath));
+    }
   }
 }

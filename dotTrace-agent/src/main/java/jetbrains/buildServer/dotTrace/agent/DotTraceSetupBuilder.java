@@ -15,7 +15,7 @@ public class DotTraceSetupBuilder implements CommandLineSetupBuilder {
   static final String DOT_TRACE_PATTERNS_EXT = ".dotTrace.patterns.xml";
   static final String DOT_TRACE_REPORT_EXT = ".dotTrace.report.xml";
   static final String DOT_TRACE_CMD_EXT = ".cmd";
-  static final String DOT_TRACE_SNAPSHOT_EXT = ".dtp";
+  static final String DOT_TRACE_SNAPSHOT_FILE = "snapshot.dtp";
 
   private final ResourceGenerator<Context> myProjectGenerator;
   private final ResourceGenerator<Context> myPatternGenerator;
@@ -63,7 +63,13 @@ public class DotTraceSetupBuilder implements CommandLineSetupBuilder {
     final List<CommandLineResource> resources = new ArrayList<CommandLineResource>(baseSetup.getResources());
     final File cmdFile = myFileService.getTempFileName(DOT_TRACE_CMD_EXT);
     final File projectFile = myFileService.getTempFileName(DOT_TRACE_PROJECT_EXT);
-    final File snapshotFile = myFileService.getTempFileName(DOT_TRACE_SNAPSHOT_EXT);
+    final File snapshotFileDir = myFileService.getTempFileName("");
+    if(!myFileService.exists(snapshotFileDir)) {
+      // TODO: use FileService.createDirectories(path) instead
+      snapshotFileDir.mkdirs();
+    }
+
+    final File snapshotFile = new File(snapshotFileDir, DOT_TRACE_SNAPSHOT_FILE);
     final File patternsFile = myFileService.getTempFileName(DOT_TRACE_PATTERNS_EXT);
     final File reportFile = myFileService.getTempFileName(DOT_TRACE_REPORT_EXT);
     final Context ctx = new Context(baseSetup, projectFile, snapshotFile, patternsFile, reportFile);

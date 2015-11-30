@@ -56,7 +56,8 @@ public class DotTraceSetupBuilderTest {
     final CommandLineSetup baseSetup = new CommandLineSetup("someTool", Arrays.asList(new CommandLineArgument("/arg1", CommandLineArgument.Type.PARAMETER), new CommandLineArgument("/arg2", CommandLineArgument.Type.PARAMETER)), Collections.singletonList(myCommandLineResource));
     final File cmdFile = new File("cmd");
     final File projectFile = new File("project");
-    final File snapshotFile = new File("snapshot");
+    final File snapshotDir = new File("snapshotRoot");
+    final File snapshotFile = new File(snapshotDir, DotTraceSetupBuilder.DOT_TRACE_SNAPSHOT_FILE);
     final File patternsFile = new File("patterns");
     final File reportFile = new File("report");
     final Context ctx = new Context(baseSetup, projectFile, snapshotFile, patternsFile, reportFile);
@@ -74,8 +75,11 @@ public class DotTraceSetupBuilderTest {
       oneOf(myFileService).getTempFileName(DotTraceSetupBuilder.DOT_TRACE_PROJECT_EXT);
       will(returnValue(projectFile));
 
-      oneOf(myFileService).getTempFileName(DotTraceSetupBuilder.DOT_TRACE_SNAPSHOT_EXT);
-      will(returnValue(snapshotFile));
+      oneOf(myFileService).getTempFileName("");
+      will(returnValue(snapshotDir));
+
+      oneOf(myFileService).exists(snapshotDir);
+      will(returnValue(true));
 
       oneOf(myFileService).getTempFileName(DotTraceSetupBuilder.DOT_TRACE_PATTERNS_EXT);
       will(returnValue(patternsFile));

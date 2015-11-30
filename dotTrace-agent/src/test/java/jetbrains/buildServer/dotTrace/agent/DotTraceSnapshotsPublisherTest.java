@@ -19,6 +19,7 @@ public class DotTraceSnapshotsPublisherTest {
   private Mockery myCtx;
   private LoggerService myLoggerService;
   private RunnerParametersService myRunnerParametersService;
+  private FileService myFileService;
 
   @BeforeMethod
   public void setUp()
@@ -27,10 +28,11 @@ public class DotTraceSnapshotsPublisherTest {
     //noinspection unchecked
     myLoggerService = myCtx.mock(LoggerService.class);
     myRunnerParametersService = myCtx.mock(RunnerParametersService.class);
+    myFileService = myCtx.mock(FileService.class);
   }
 
   @Test
-  public void shouldSendPerformanceSnapshotFileAsArtifactFilesWhenPublishAfterBuildArtifactFile() throws IOException {
+  public void shouldSendSnapshotFileAsArtifactFileWhenHasNoParentDirectory() throws IOException {
     // Given
     final CommandLineExecutionContext executionContext = new CommandLineExecutionContext(0);
     final File outputFile = new File("output");
@@ -52,6 +54,33 @@ public class DotTraceSnapshotsPublisherTest {
     myCtx.assertIsSatisfied();
   }
 
+  @Test
+  public void shouldSendAllSnapshotsFileFromDirectoryWhenHasParentDirectory() throws IOException {
+    // Given
+    final CommandLineExecutionContext executionContext = new CommandLineExecutionContext(0);
+    final File root = new File("root");
+    final File outputFile = new File(root, "output");
+    final File snapshotsDir = new File("snapshotsDir");
+
+    myCtx.checking(new Expectations() {{
+      oneOf(myRunnerParametersService).tryGetRunnerParameter(Constants.SNAPSHOTS_PATH_VAR);
+      will(returnValue(snapshotsDir.getPath()));
+
+      oneOf(myFileService).listFiles(root);
+      will(returnValue(new File[] { new File("snapshot1"), new File("snapshot2") }));
+
+      exactly(2).of(myLoggerService).onMessage(with(any(Message.class)));
+    }});
+
+    final ResourcePublisher instance = createInstance();
+
+    // When
+    instance.publishAfterBuildArtifactFile(executionContext, outputFile);
+
+    // Then
+    myCtx.assertIsSatisfied();
+  }
+
   @DataProvider(name = "artefactsPathCases")
   public Object[][] getArtefactsPathCases() {
     return new Object[][] {
@@ -62,7 +91,7 @@ public class DotTraceSnapshotsPublisherTest {
   }
 
   @Test(dataProvider = "artefactsPathCases")
-  public void shouldNotSendPerformanceSnapshotFileAsArtifactFilesWhenSnapshotsPathIsNullOrEmpty(@Nullable final String artefactsPath) throws IOException {
+  public void shouldNotSendSnapshotFileAsArtifactFilesWhenSnapshotsPathIsNullOrEmpty(@Nullable final String artefactsPath) throws IOException {
     // Given
     final CommandLineExecutionContext executionContext = new CommandLineExecutionContext(0);
     final File outputFile = new File("output");
@@ -86,6 +115,9 @@ public class DotTraceSnapshotsPublisherTest {
   @NotNull
   private DotTraceSnapshotsPublisher createInstance()
   {
-    return new DotTraceSnapshotsPublisher(myLoggerService, myRunnerParametersService);
+    return new DotTraceSnapshotsPublisher(
+      myLoggerService,
+      myRunnerParametersService,
+      myFileService);
   }
 }
