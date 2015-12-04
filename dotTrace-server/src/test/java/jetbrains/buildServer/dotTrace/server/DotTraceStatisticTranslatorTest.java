@@ -87,8 +87,14 @@ public class DotTraceStatisticTranslatorTest {
       oneOf(myMetricComparer).isMeasuredValueWithinThresholds(new BigDecimal(5), new BigDecimal(1), new ThresholdValue(ThresholdValueType.LAST, new BigDecimal(3)));
       will(returnValue(false));
 
+      oneOf(myMetricComparer).tryGetThresholdValue(new BigDecimal(5), new ThresholdValue(ThresholdValueType.LAST, new BigDecimal(3)));
+      will(returnValue(new BigDecimal(10)));
+
       oneOf(myMetricComparer).isMeasuredValueWithinThresholds(new BigDecimal(6), new BigDecimal(2), new ThresholdValue(ThresholdValueType.LAST, new BigDecimal(4)));
       will(returnValue(false));
+
+      oneOf(myMetricComparer).tryGetThresholdValue(new BigDecimal(6), new ThresholdValue(ThresholdValueType.LAST, new BigDecimal(4)));
+      will(returnValue(new BigDecimal(10)));
 
       oneOf(myStatisticKeyFactory).createTotalTimeKey("method1");
       will(returnValue("TotalTimeKey"));
@@ -201,6 +207,9 @@ public class DotTraceStatisticTranslatorTest {
       oneOf(myMetricComparer).isMeasuredValueWithinThresholds(new BigDecimal(5), new BigDecimal(1), new ThresholdValue(ThresholdValueType.LAST, new BigDecimal(3)));
       will(returnValue(false));
 
+      oneOf(myMetricComparer).tryGetThresholdValue(new BigDecimal(5), new ThresholdValue(ThresholdValueType.LAST, new BigDecimal(3)));
+      will(returnValue(new BigDecimal(10)));
+
       oneOf(myMetricComparer).isMeasuredValueWithinThresholds(new BigDecimal(6), new BigDecimal(2), new ThresholdValue(ThresholdValueType.LAST, new BigDecimal(4)));
       will(returnValue(true));
 
@@ -254,6 +263,9 @@ public class DotTraceStatisticTranslatorTest {
 
       oneOf(myMetricComparer).isMeasuredValueWithinThresholds(new BigDecimal(6), new BigDecimal(2), new ThresholdValue(ThresholdValueType.LAST, new BigDecimal(4)));
       will(returnValue(false));
+
+      oneOf(myMetricComparer).tryGetThresholdValue(new BigDecimal(6), new ThresholdValue(ThresholdValueType.LAST, new BigDecimal(4)));
+      will(returnValue(new BigDecimal(10)));
 
       oneOf(myStatisticKeyFactory).createTotalTimeKey("method1");
       will(returnValue("TotalTimeKey"));

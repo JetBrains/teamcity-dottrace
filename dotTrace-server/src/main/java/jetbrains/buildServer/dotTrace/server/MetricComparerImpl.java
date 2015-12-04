@@ -9,22 +9,31 @@ public class MetricComparerImpl implements MetricComparer {
 
   @Override
   public boolean isMeasuredValueWithinThresholds(@NotNull final BigDecimal prevValue, @NotNull final BigDecimal measuredValue, @NotNull final ThresholdValue threshold) {
+    final BigDecimal thresholdValue = tryGetThresholdValue(prevValue, threshold);
+    if(thresholdValue == null) {
+      return true;
+    }
+
+    return thresholdValue.compareTo(measuredValue) >= 0;
+  }
+
+  public BigDecimal tryGetThresholdValue(@NotNull final BigDecimal prevValue, @NotNull final ThresholdValue threshold) {
     switch (threshold.getType()) {
       case SKIPPED:
-        return true;
+        return null;
 
       case ABSOLUTE:
-        return threshold.getValue().compareTo(measuredValue) >= 0;
+        return threshold.getValue();
 
       case FIRST:
       case LAST:
       case AVERAGE:
         if(prevValue.compareTo(BigDecimal.ZERO) == 0) {
-          return true;
+          return null;
         }
 
-        final BigDecimal deviation = measuredValue.subtract(prevValue).multiply(MULTIPLICAND_100).divide(prevValue, 4, RoundingMode.HALF_UP);
-        return deviation.compareTo(threshold.getValue()) <= 0;
+        final BigDecimal deviation = prevValue.multiply(threshold.getValue()).divide(MULTIPLICAND_100, 4, RoundingMode.HALF_UP);
+        return prevValue.add(deviation);
 
       default:
         throw new UnsupportedOperationException();
