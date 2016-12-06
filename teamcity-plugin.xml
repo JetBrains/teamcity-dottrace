@@ -4,7 +4,7 @@
     <name>dotTrace</name>
     <display-name>JetBrains dotTrace</display-name>
     <version>@Version@</version>
-    <description>Provides ability to run build step under the JetBrains dotTrace Command-Line Profiler for the .Net related build runners in the TeamCity.</description>
+    <description>Provides ability to run a build step under the JetBrains dotTrace Command-Line Profiler for the .Net-related build runners on TeamCity.</description>
     <download-url>https://github.com/JetBrains/teamcity-dottrace</download-url>
     <email>Nikolay.Pianikov@jetbrains.com</email>
     <vendor>
