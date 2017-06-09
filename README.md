@@ -2,6 +2,8 @@
 
 This plugin provides the ability to run a build step under the [JetBrains dotTrace Command-Line Profiler](https://www.jetbrains.com/profiler/help/Performance_Profiling__Profiling_Using_the_Command_Line.html). It is integrated into all .NET-related TeamCity build runners.
 
+[<img src="http://teamcity.jetbrains.com/app/rest/builds/buildType:(id:TeamCityPluginsByJetBrains_DotTrace_Build)/statusIcon.svg"/>](http://teamcity.jetbrains.com/viewType.html?buildTypeId=TeamCityPluginsByJetBrains_DotTrace_Build)
+
 ## How to Use It ##
 The main purpose of the plugin is doing performance profiling as one of the continuous integration steps.
 
@@ -17,7 +19,7 @@ That's it! Once the build is run, the plugin runs the tests and checks the execu
 
 ## Installation ##
 
-To install the plugin, put the [zip archive](http://teamcity.jetbrains.com/httpAuth/app/rest/builds/buildType:TeamCityPluginsByJetBrains_DotTrace_Build,pinned:true,status:SUCCESS,branch:master/artifacts/content/dotTrace.zip) to the 'plugins' directory under TeamCity data directory. Restart the server. JetBrains dotTrace command-line profiler is a free separate tool that contains a self-profiling API. To be used, the JetBrains dotTrace command-line profiler is required on each TeamCity agent where it will be run.
+To install the plugin, put the [zip archive](http://teamcity.jetbrains.com/httpAuth/app/rest/builds/buildType:TeamCityPluginsByJetBrains_DotTrace_Build,pinned:true,status:SUCCESS,branch:master,tags:release/artifacts/content/dotTrace.zip) to the 'plugins' directory under TeamCity data directory. Restart the server. JetBrains dotTrace command-line profiler is a free separate tool that contains a self-profiling API. To be used, the JetBrains dotTrace command-line profiler is required on each TeamCity agent where it will be run.
 
 ## Implemention ##
 
