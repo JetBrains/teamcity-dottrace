@@ -1,4 +1,4 @@
-# JetBrains dotTrace plugin for TeamCity #
+## [<img src="http://jb.gg/badges/official.svg" height="20" align="center"/>](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub) JetBrains dotTrace plugin for [<img src="https://cdn.worldvectorlogo.com/logos/teamcity.svg" height="20" align="center"/>](https://www.jetbrains.com/teamcity/)
 
 This plugin provides the ability to run a build step under the [JetBrains dotTrace Command-Line Profiler](https://www.jetbrains.com/profiler/help/Performance_Profiling__Profiling_Using_the_Command_Line.html). It is integrated into all .NET-related TeamCity build runners.
 
