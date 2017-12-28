@@ -21,7 +21,7 @@ public class DotTraceEditExtension extends RunTypeExtension implements PositionA
   private static final String PATH_NOT_SPECIFIED_ERROR_MESSAGE = "The path to dotTrace must be specified.";
   private static final String THRESHOLDS_NOT_SPECIFIED_ERROR_MESSAGE = "The threshold values must be specified.";
   private static final String PROFILE_CHILD_PROCESSES_DEFAULT_VAL = "true";
-  private static final List<String> ourRunTypes = Arrays.asList("MSBuild", "NAnt", "NUnit", "jetbrains.mspec", "jetbrains.dotNetGenericRunner", "jetbrains.xunit", "VisualStudioTest", "MSTest", "VSTest");
+  private static final List<String> ourRunTypes = Arrays.asList("MSBuild", "NAnt", "NUnit", "jetbrains.mspec", "jetbrains.dotNetGenericRunner", "jetbrains.xunit", "VisualStudioTest", "MSTest", "VSTest", "dotnet.cli");
   private final String myViewUrl;
   private final String myEditUrl;
 
