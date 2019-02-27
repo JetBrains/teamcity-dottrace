@@ -50,22 +50,15 @@ public class BuildPublisher implements ResourcePublisher {
       return;
     }
 
-    final Map<String, Metric> thresholdValueMap = new HashMap<String, Metric>();
-    for (Metric thresholdValue: thresholdValues.getMetrics()) {
-      thresholdValueMap.put(thresholdValue.getMethodName(), thresholdValue);
-    }
-
     try {
       final String reportContent = myFileService.readAllTextFile(reportFile);
       final Metrics measuredValues = myReportParser.parse(reportContent);
-
       for (Metric measuredValue : measuredValues.getMetrics()) {
-        final Metric thresholdValue = thresholdValueMap.get(measuredValue.getMethodName());
-        if(thresholdValue == null) {
-          continue;
+        for (final Metric thresholdValue : thresholdValues.getMetrics()) {
+          if(measuredValue.getMethodName().startsWith(thresholdValue.getMethodName())) {
+            myLoggerService.onMessage(new StatisticMessage(measuredValue.getMethodName(), thresholdValue.getTotalTime(), thresholdValue.getOwnTime(), measuredValue.getTotalTime(), measuredValue.getOwnTime()));
+          }
         }
-
-        myLoggerService.onMessage(new StatisticMessage(measuredValue.getMethodName(), thresholdValue.getTotalTime(), thresholdValue.getOwnTime(), measuredValue.getTotalTime(), measuredValue.getOwnTime()));
       }
     }
     catch (IOException e) {

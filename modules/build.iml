@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_5">
+    <output url="file://$MODULE_DIR$/../build/target/classes" />
+    <output-test url="file://$MODULE_DIR$/../build/target/test-classes" />
+    <content url="file://$MODULE_DIR$/../build">
+      <excludeFolder url="file://$MODULE_DIR$/../build/target" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: org.jetbrains.teamcity.plugins:dotTrace-agent:1.0.2" level="project" />
+    <orderEntry type="library" name="Maven: org.jetbrains.teamcity.plugins:dotTrace-common:1.0.2" level="project" />
+    <orderEntry type="library" name="Maven: org.jetbrains.teamcity.plugins:dotTrace-server:1.0.2" level="project" />
+  </component>
+</module>

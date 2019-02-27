@@ -44,13 +44,13 @@ public class BuildPublisherTest {
       Arrays.asList(
         new Metric("Method1", "100", "33"),
         new Metric("Method77", "123", "456"),
-        new Metric("Method2", "99", "22")));
+        new Metric("MethodAbc2", "99", "22")));
 
     final Metrics thresholdsMetrics = new Metrics(
       Arrays.asList(
         new Metric("Method88", "88", "345"),
         new Metric("Method1", "100", "1000"),
-        new Metric("Method2", "F22", "F35")));
+        new Metric("MethodA", "F22", "F35")));
 
     final CommandLineExecutionContext ctx = new CommandLineExecutionContext(0);
 
@@ -77,7 +77,7 @@ public class BuildPublisherTest {
 
       oneOf(myLoggerService).onMessage(new StatisticMessage("Method1", "100", "1000", "100", "33"));
 
-      oneOf(myLoggerService).onMessage(new StatisticMessage("Method2", "F22", "F35", "99", "22"));
+      oneOf(myLoggerService).onMessage(new StatisticMessage("MethodAbc2", "F22", "F35", "99", "22"));
     }});
 
     final ResourcePublisher instance = createInstance();
