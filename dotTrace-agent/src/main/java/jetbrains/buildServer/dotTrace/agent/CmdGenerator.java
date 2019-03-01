@@ -11,10 +11,6 @@ public class CmdGenerator implements ResourceGenerator<Context> {
   static final String DOT_TRACE_REPORTER_EXE_NAME = "Reporter.exe";
 
   private static final String ourLineSeparator = System.getProperty("line.separator");
-  private static final String REPORTING_ARG = "/reporting";
-  private static final String SET_EXIT_CODE_CMD = "SET EXIT_CODE=%ERRORLEVEL%";
-  private static final String ECHO_EXIT_CODE_CMD = "@echo EXIT_CODE=%EXIT_CODE%";
-  private static final String EXIT_CMD = "exit %EXIT_CODE%";
 
   private final CommandLineArgumentsService myCommandLineArgumentsService;
   private final RunnerParametersService myParametersService;
@@ -56,25 +52,27 @@ public class CmdGenerator implements ResourceGenerator<Context> {
     cmdLines.append(ourLineSeparator);
 
     // Save exit code to EXIT_CODE
-    cmdLines.append(SET_EXIT_CODE_CMD);
+    cmdLines.append("@SET EXIT_CODE=%ERRORLEVEL%");
     cmdLines.append(ourLineSeparator);
 
     // Run reporter
+    File stapshotDir = ctx.getSnapshotFile().getParentFile();
+    if(stapshotDir == null) {
+      stapshotDir = new File(".");
+    }
     cmdLines.append(
       myCommandLineArgumentsService.createCommandLineString(
         Arrays.asList(
           new CommandLineArgument(reporterPath.getPath(), CommandLineArgument.Type.TOOL),
-          new CommandLineArgument(REPORTING_ARG, CommandLineArgument.Type.PARAMETER),
-          new CommandLineArgument(ctx.getSnapshotFile().getPath(), CommandLineArgument.Type.PARAMETER),
-          new CommandLineArgument(ctx.getPatternsFile().getPath(), CommandLineArgument.Type.PARAMETER),
-          new CommandLineArgument(ctx.getReportFile().getPath(), CommandLineArgument.Type.PARAMETER))));
+          new CommandLineArgument("report", CommandLineArgument.Type.PARAMETER),
+          new CommandLineArgument(stapshotDir.getPath() + File.separator + "*.dtp", CommandLineArgument.Type.PARAMETER),
+          new CommandLineArgument("--pattern=" + ctx.getPatternsFile().getPath(), CommandLineArgument.Type.PARAMETER),
+          new CommandLineArgument("--save-to=" + ctx.getReportFile().getPath(), CommandLineArgument.Type.PARAMETER))));
 
     cmdLines.append(ourLineSeparator);
 
     // Return exit code from EXIT_CODE
-    cmdLines.append(ECHO_EXIT_CODE_CMD);
-    cmdLines.append(ourLineSeparator);
-    cmdLines.append(EXIT_CMD);
+    cmdLines.append("@EXIT %EXIT_CODE%");
     cmdLines.append(ourLineSeparator);
 
     return cmdLines.toString();

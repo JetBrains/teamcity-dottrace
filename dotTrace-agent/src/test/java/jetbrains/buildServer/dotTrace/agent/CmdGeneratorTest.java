@@ -39,19 +39,17 @@ public class CmdGeneratorTest {
         null,
         new File("path", "abc").getAbsoluteFile(),
         "ProfilerCmd" + ourlineSeparator
-        + "SET EXIT_CODE=%ERRORLEVEL%" + ourlineSeparator
+        + "@SET EXIT_CODE=%ERRORLEVEL%" + ourlineSeparator
         + "ReporterCmd" + ourlineSeparator
-        + "@echo EXIT_CODE=%EXIT_CODE%" + ourlineSeparator
-        + "exit %EXIT_CODE%"
+        + "@EXIT %EXIT_CODE%"
       },
       {
         new File("root"),
         new File("path", "abc"),
         "ProfilerCmd" + ourlineSeparator
-        + "SET EXIT_CODE=%ERRORLEVEL%" + ourlineSeparator
+        + "@SET EXIT_CODE=%ERRORLEVEL%" + ourlineSeparator
         + "ReporterCmd" + ourlineSeparator
-        + "@echo EXIT_CODE=%EXIT_CODE%" + ourlineSeparator
-        + "exit %EXIT_CODE%"
+        + "@EXIT %EXIT_CODE%"
       },
     };
   }
@@ -60,7 +58,7 @@ public class CmdGeneratorTest {
   public void shouldGenerateContent(@Nullable final File checkoutPath, @NotNull final File toolPath, @NotNull final String expectedContent) {
     // Given
     final File projectFile = new File("project");
-    final File snapshotFile = new File("snapshot");
+    final File snapshotFile = new File(new File("snapshots"), "snapshot.dtp");
     final File patternsFile = new File("patterns");
     final File reportFile = new File("report");
     File path;
@@ -94,10 +92,10 @@ public class CmdGeneratorTest {
 
       oneOf(myCommandLineArgumentsService).createCommandLineString(Arrays.asList(
         new CommandLineArgument(reporterFile.getPath(), CommandLineArgument.Type.TOOL),
-        new CommandLineArgument("/reporting", CommandLineArgument.Type.PARAMETER),
-        new CommandLineArgument(snapshotFile.getPath(), CommandLineArgument.Type.PARAMETER),
-        new CommandLineArgument(patternsFile.getPath(), CommandLineArgument.Type.PARAMETER),
-        new CommandLineArgument(reportFile.getPath(), CommandLineArgument.Type.PARAMETER)));
+        new CommandLineArgument("report", CommandLineArgument.Type.PARAMETER),
+        new CommandLineArgument(snapshotFile.getParentFile().getPath() + File.separator + "*.dtp", CommandLineArgument.Type.PARAMETER),
+        new CommandLineArgument("--pattern=" + patternsFile.getPath(), CommandLineArgument.Type.PARAMETER),
+        new CommandLineArgument("--save-to=" + reportFile.getPath(), CommandLineArgument.Type.PARAMETER)));
 
       will(returnValue("ReporterCmd"));
     }});
