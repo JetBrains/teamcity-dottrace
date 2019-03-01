@@ -35,9 +35,8 @@ public class StatisticProviderImpl implements StatisticProvider {
     final String totalTimeKey = myStatisticKeyFactory.createTotalTimeKey(methodName);
     final String ownTimeKey = myStatisticKeyFactory.createOwnTimeKey(methodName);
 
-    final ValueAggregatorFactory valueAggregatorFactory = myBeanFactory.getBean(ValueAggregatorFactory.class);
-    final ValueAggregator totalTimeAgg = valueAggregatorFactory.tryCreate(totalTimeThreshold.getType());
-    final ValueAggregator ownTimeAgg = valueAggregatorFactory.tryCreate(ownTimeThreshold.getType());
+    final ValueAggregator totalTimeAgg = myBeanFactory.getBean(ValueAggregatorFactory.class).tryCreate(totalTimeThreshold.getType());
+    final ValueAggregator ownTimeAgg = myBeanFactory.getBean(ValueAggregatorFactory.class).tryCreate(ownTimeThreshold.getType());
 
     for(HistoryElement historyElement : historyProviders) {
       @Nullable final BigDecimal totalTimeVal = historyElement.tryGetValue(totalTimeKey);

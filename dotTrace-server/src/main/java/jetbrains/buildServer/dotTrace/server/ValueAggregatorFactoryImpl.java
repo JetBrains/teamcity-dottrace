@@ -2,6 +2,7 @@ package jetbrains.buildServer.dotTrace.server;
 
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.BeanFactory;
 
 public class ValueAggregatorFactoryImpl implements ValueAggregatorFactory {
   private final ValueAggregator myValueAggregatorFirst;

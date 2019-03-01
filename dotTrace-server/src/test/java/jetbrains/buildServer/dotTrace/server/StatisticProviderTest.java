@@ -55,7 +55,7 @@ public class StatisticProviderTest {
   public void shouldTryCreateStatistic() {
     // Given
     myCtx.checking(new Expectations() {{
-      oneOf(myBeanFactory).getBean(ValueAggregatorFactory.class);
+      exactly(2).of(myBeanFactory).getBean(ValueAggregatorFactory.class);
       will(returnValue(myValueAggregatorFactory));
 
       oneOf(myValueAggregatorFactory).tryCreate(ThresholdValueType.LAST);
@@ -122,7 +122,7 @@ public class StatisticProviderTest {
   public void shouldNotAggregateWhenHistoryReturnsNull() {
     // Given
     myCtx.checking(new Expectations() {{
-      oneOf(myBeanFactory).getBean(ValueAggregatorFactory.class);
+      exactly(2).of(myBeanFactory).getBean(ValueAggregatorFactory.class);
       will(returnValue(myValueAggregatorFactory));
 
       oneOf(myValueAggregatorFactory).tryCreate(ThresholdValueType.LAST);
@@ -185,7 +185,7 @@ public class StatisticProviderTest {
   public void shouldStopAggregationWhenAllAggregatorAreCompleted() {
     // Given
     myCtx.checking(new Expectations() {{
-      oneOf(myBeanFactory).getBean(ValueAggregatorFactory.class);
+      exactly(2).of(myBeanFactory).getBean(ValueAggregatorFactory.class);
       will(returnValue(myValueAggregatorFactory));
 
       oneOf(myValueAggregatorFactory).tryCreate(ThresholdValueType.LAST);
@@ -242,7 +242,7 @@ public class StatisticProviderTest {
   public void shouldTryCreateStatisticWhenNoHistory() {
     // Given
     myCtx.checking(new Expectations() {{
-      oneOf(myBeanFactory).getBean(ValueAggregatorFactory.class);
+      exactly(2).of(myBeanFactory).getBean(ValueAggregatorFactory.class);
       will(returnValue(myValueAggregatorFactory));
 
       oneOf(myValueAggregatorFactory).tryCreate(ThresholdValueType.LAST);
@@ -364,7 +364,7 @@ public class StatisticProviderTest {
   public void shouldUseAbsoluteValueAsExpectedWhenAbsoluteThreshold() {
     // Given
     myCtx.checking(new Expectations() {{
-      oneOf(myBeanFactory).getBean(ValueAggregatorFactory.class);
+      exactly(2).of(myBeanFactory).getBean(ValueAggregatorFactory.class);
       will(returnValue(myValueAggregatorFactory));
 
       oneOf(myValueAggregatorFactory).tryCreate(ThresholdValueType.LAST);
